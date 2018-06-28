@@ -56,7 +56,7 @@ module.exports = function(sequelize, DataTypes){
     User.associate = function(models){
         User.belongsTo(models.Room, {
             foreignKey: {
-                allowNull: false;
+                allowNull: false
             }
         });
     };
