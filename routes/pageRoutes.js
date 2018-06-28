@@ -1,6 +1,22 @@
 // Dependencies
 var path = require("path");
+var db = require("../models");
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('group_planner_db', 'root', 'admin', {
+  host: 'localhost',
+  dialect: 'mysql',
 
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+
+
+  // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
+  operatorsAliases: false
+});
 // Routes
 module.exports = function(app) {
 
@@ -11,8 +27,50 @@ module.exports = function(app) {
     });
 
     app.post("/", function(req,res){
-        console.log(req.body);
-        res.end();
+        // console.log(req.body);
+        var start_day = req.body.dayProperty.toLowerCase() + "_start";
+        var end_day = req.body.dayProperty.toLowerCase() + "_end";
+        console.log(start_day + " " + end_day);
+        var d = new Date();
+        console.log(d);
+
+        var start_time;
+        var end_time;
+
+        // switch(req.body.timeProperty){
+        //     case "Morning":
+        //         start_time = new Date(2018, 06, 28, 9);
+        //         end_time = new Date(2018, 06, 30, 13);
+        //         break;
+        //     case "Afternoon":
+        //         start_time = new Date(2018, 06, 28, 9);
+        //         end_time = new Date(2018, 06, 30, 13);
+        //         break;
+        //     case "Night":
+        //         start_time = new Date(2018, 06, 28, 9);
+        //         end_time = new Date(2018, 06, 30, 13);
+        //         break;
+        //     case "After Hours":
+        //         start_time = new Date(2018, 06, 28, 9);
+        //         end_time = new Date(2018, 06, 30, 13);
+        //         break;
+        // }
+        sequelize.query(
+            'INSERT INTO users SET name = ?, ? = ?, ? = ?',
+            { replacements: [req.body.personProperty, start_day, d, end_day, d],  }
+        ).then( result => {
+            res.end();
+        // console.log(projects)
+        });
+        // db.User.create({
+        //     name: req.body.personProperty,
+        //     friday_start: d,
+        //     friday_end: d
+        // }).then(result => {
+        //     // console.log(result);
+        //     res.end();
+        // })
+       
     })
 
     app.get("/two", function(req, res) {
