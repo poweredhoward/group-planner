@@ -1,6 +1,7 @@
 // DEPENDENCIES
 var express = require("express");
 var bodyParser = require("body-parser");
+var exhbs = require("express-handlebars");
 
 // Sets up the Express App
 var app = express();
@@ -18,6 +19,9 @@ app.use(bodyParser.json());
 // Static directory
 app.use(express.static("public"));
 
+app.engine("handlebars", exhbs ({defaultlayout: "main"}));
+app.set("view engine", "handlebars");
+
 // Routes
 require("./routes/pageRoutes")(app);
 
@@ -26,4 +30,23 @@ db.sequelize.sync({ force: false }).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });
+});
+
+
+var object = [{
+  nameInput : "bryan",
+  dayInput : "Friday",
+  timeOfDayInput : "Evening",
+  activitysInput : "laundry"
+},
+{
+  nameInput : "justin",
+  dayInput : "Saturday",
+  timeOfDayInput : "Morning",
+  activitysInput : "sports"
+}
+];
+
+app.get("/dumb", function(req,res){
+  res.render("index", {users: object});
 });
