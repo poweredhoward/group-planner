@@ -1,1 +1,24 @@
 /* Initial file */
+
+body{background-color:#ebeb;}
+
+header{text-align:center;
+       box-shadow:2px 2px black;
+       background-color:green;
+       font-family:cursive;}
+
+.nameInput, .dayInput, .timeOfDayInput, .activitysInput, .otherChoiceInput{font-size:40px;
+                                                                           padding-top:30px;}
+
+.nameInput{position:relative;}
+
+.dayInput{position:relative;}
+
+.timeOfDayInput{position:relative;}
+
+.activitysInput{position:relative;}
+
+.otherChoiceInput{position:relative;}
+
+
+
