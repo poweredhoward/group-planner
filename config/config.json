@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "admin",
-    "database": "group_planner_db",
+    "password": "root",
+    "database": "group_planner",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

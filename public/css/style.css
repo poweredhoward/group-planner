@@ -21,4 +21,8 @@ header{text-align:center;
 .otherChoiceInput{position:relative;}
 
 
-
+.result{
+    height: 500px;
+    width: 400px;
+    background-color: lemonchiffon;
+}
