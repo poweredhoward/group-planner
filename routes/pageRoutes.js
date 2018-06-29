@@ -128,7 +128,7 @@ module.exports = function(app) {
     });
 
 
-    // app.get("/four", function(req, res) {
-    //     res.sendFile(path.join(__dirname, "../public/four.html"));
-    // });
+    app.get("/four", function(req, res) {
+        res.sendFile(path.join(__dirname, "../public/four.html"));
+    });
 };
