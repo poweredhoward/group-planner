@@ -33,6 +33,18 @@ db.sequelize.sync({ force: true }).then(function() {
 });
 
 
+app.post('/postRoom',(req,res)=>{
+  var room=req.body;
+  console.log(room.name)
+  db.Room.create({
+    name:room.name,
+  }).then(function(){
+    console.log('added!')
+    res.end()
+  })
+ })
+
+
 var object = [{
   nameInput : "bryan",
   dayInput : "Friday",
@@ -50,3 +62,12 @@ var object = [{
 app.get("/dumb", function(req,res){
   res.render("index", {users: object});
 });
+
+
+// app.post("/category", function(req,res){
+//   var x = req.body;
+//   console.log (x);
+//   db.category.Create({
+
+//   })
+// })
