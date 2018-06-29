@@ -11,7 +11,8 @@ module.exports = function(sequelize, DataTypes){
 
     Room.associate = function(models){
         Room.hasMany(models.User, {
-            onDelete: "cascade"
+            onDelete: "cascade",
+            name: "RoomId"
         });
     };
 

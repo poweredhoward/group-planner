@@ -1,1 +1,44 @@
-<h1>PAGE 4</h1>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+  <h1> START A PARTY </h1>
+
+  <h3>Every good party <em>NEEDS</em> a name!!</h3>
+  <input type='text' id='partyName'>
+  <button id='enterName'>Party Time!</button>
+
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+  <script>
+  
+  $('#enterName').on("click",()=>{
+      var partyName=$("#partyName").val();
+      if(partyName === ""){alert("umm,we can do better then that!!")}
+     // $.get('/partyRoomName').then(function(data){
+      //    for(var i=0;i<data.length;i++){
+     //         if(partyName === data[i].roomName){alert("someone beat you to that party, just spruce it up with your own personal detail")}
+    //      }
+           var newRoom={
+               name:partyName,
+           }
+          $.post('/postRoom',newRoom).then(function(){
+              console.log('success!')
+          
+          })
+        })
+  //  })
+      
+  </script>
+
+</body>
+</html>

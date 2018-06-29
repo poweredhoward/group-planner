@@ -22,7 +22,8 @@ module.exports = function(sequelize, DataTypes){
         console.log(models.UserCategory);
         Category.belongsTo(models.Room, {
             foreignKey: {
-                allowNull: true
+                allowNull: true,
+                name: "RoomId"
             }
         });
 
