@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel='stylesheet' href='/css/style.css'>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous">
+    </script>
+
+    <title>ROOM</title>
+
+</head>
+<body>
+    
+    <h1 id = "h1">Welcome to Your Room, </h1>
+
+    <h2>Save this page to come back to it</h2>
+
+    <!-- FOR TESTING ROUTING BUTTON TO HOMEPAGE WHERE FORM IS CURRENTLY LOCATED -->
+    <a class="routeToForm" id="routeToForm" href="/myroom/form">
+        <button>ENTER!</button>
+    </a>
+
+    <h2>ROOM PAGE TO HOME PAGE</h2>
+
+    <!-- FOR TESTING ROUTING BACK TO HOME PAGE -->
+    <a class="routeToHome" href="/">
+        <button>HOME!</button>
+    </a>
+
+    <script>
+
+
+        var addr = $(location).attr('href').split("/");
+        addr =addr[addr.length-1];
+        $("#routeToForm").attr("href", "/"+addr+"/form");
+        $("#h1").append(addr);
+
+    </script>
+
+</body>
+</html>

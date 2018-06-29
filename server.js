@@ -17,7 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Static directory
-app.use(express.static("public"));
+// app.use(express.static("public"));
+app.use(express.static(__dirname + '/public'));
 
 app.engine("handlebars", exhbs ({defaultlayout: "main"}));
 app.set("view engine", "handlebars");
@@ -26,27 +27,11 @@ app.set("view engine", "handlebars");
 require("./routes/pageRoutes")(app);
 
 // Syncing our sequelize models and then starting our Express app
-db.sequelize.sync({ force: true }).then(function() {
+db.sequelize.sync({ force: false }).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });
 });
 
 
-var object = [{
-  nameInput : "bryan",
-  dayInput : "Friday",
-  timeOfDayInput : "Evening",
-  activitysInput : "laundry"
-},
-{
-  nameInput : "justin",
-  dayInput : "Saturday",
-  timeOfDayInput : "Morning",
-  activitysInput : "sports"
-}
-];
 
-app.get("/dumb", function(req,res){
-  res.render("index", {users: object});
-});

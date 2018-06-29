@@ -11,7 +11,7 @@ module.exports = function(app) {
         res.sendFile(path.join(__dirname, "../public/index.html"));
     });
 
-    app.post("/", function(req,res){
+    app.post("/:room/form", function(req,res){
         console.log(req.body);
         var start_day = req.body.day.toLowerCase().split(" ")[0] + "_start";
         var end_day = req.body.day.toLowerCase().split(" ")[0] + "_end";
@@ -92,15 +92,43 @@ module.exports = function(app) {
        
     })
 
-    app.get("/two", function(req, res) {
-        res.sendFile(path.join(__dirname, "../public/two.html"));
+    app.get("/:room", function(req, res) {
+        var roomname = req.params.room;
+        db.Room.findOne({
+            where: {
+                name: roomname
+            }
+        }).then(result =>{
+            console.log(result);
+            if(result === null){
+                res.send("Not a real room");
+            }
+            else{
+                res.sendFile(path.join(__dirname, "../public/room.html"));
+            }
+        })
+        
     });
 
-    app.get("/three", function(req, res) {
-        res.sendFile(path.join(__dirname, "../public/three.html"));
+    app.get("/:room/form", function(req, res) {
+        var roomname = req.params.room;
+        db.Room.findOne({
+            where: {
+                name: roomname
+            }
+        }).then(result =>{
+            console.log(result);
+            if(result === null){
+                res.send("Not a real room");
+            }
+            else{
+                res.sendFile(path.join(__dirname, "../public/form.html"));
+            }
+        })
     });
 
-    app.get("/four", function(req, res) {
-        res.sendFile(path.join(__dirname, "../public/four.html"));
-    });
+
+    // app.get("/four", function(req, res) {
+    //     res.sendFile(path.join(__dirname, "../public/four.html"));
+    // });
 };
