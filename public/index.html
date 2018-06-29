@@ -22,11 +22,11 @@
 <br>
 <div class='dayInput'> 
     <label>Pick a Day: </label>
-<select id='day'> 
-    <option value='1'>Friday</option>
-    <option value='2'>Saturday</option>
-     <option value='3'>Sunday</option>
-</select>
+    <select id='day'> 
+        <!-- <option value='1'>Friday</option>
+        <option value='2'>Saturday</option>
+        <option value='3'>Sunday</option> -->
+    </select>
 </div>
 <br>
 
@@ -35,8 +35,8 @@
 <select id='timeOfDay'>
         <option value='1'>Morning</option>
         <option value='2'>Afternoon</option>
-         <option value='3'>Night</option>
-         <option value='4'>After Hours</option>
+        <option value='3'>Night</option>
+        <option value='4'>After Hours</option>
 </select>
 </div>
 
@@ -58,10 +58,6 @@
 </div>  
 
 
-
-
-
-
 <div class='otherChoiceInput'>
         <label>Users Own Choice 
             <input type='text' id='userInput'>
@@ -77,6 +73,22 @@
 
   <script>
 
+    // Drop down shows options for picking a day, up to a week ahead of time
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var today = new Date().getDay();
+    var ordereddays =[];
+    ordereddays[0] = days[today] + " (Today)";
+    for(var i=0; i<days.length ; i++){
+        if(i !== today)
+        ordereddays.push(days[i]);
+    };
+
+    ordereddays.push(days[today] + " (Next Week)");
+
+    ordereddays.forEach(day =>{
+        $("#day").append( $("<option>").text(day) );
+    })
+
       // user click to grab all the data
       $("#submitInfo").on("click",function(){
 
@@ -89,9 +101,11 @@
 
 
           // translating from the dayChoice drop-menu
-          if(day === '1'){day="Friday"}
-          if(day === '2'){day="Saturday"}
-          if(day === '3'){day="Sunday"}
+        //   if(day === '1'){day="Friday"}
+        //   if(day === '2'){day="Saturday"}
+        //   if(day === '3'){day="Sunday"}
+        
+
           if(timeOfDay === '1'){timeOfDay="Morning"}
           if(timeOfDay === '2'){timeOfDay="Afternoon"}
           if(timeOfDay === '3'){timeOfDay="Night"}
@@ -110,17 +124,19 @@
           if(activity === '9'){activity="bar hopping"}
           if(activity === "10"){activity="other"}
           // custom input grab
-          if(activity === "other"){customActivity=$("#userInput").val();}
+          if(activity === "other"){
+              customActivity=$("#userInput").val();
+            }
           console.log(activity)
         
 
         //object to send to back-end
           var infoForBack={
-              personProperty:name,
-              dayProperty:day,
-              timeProperty:timeOfDay,
-              activityProperty:activity,
-              customProperty:customActivity
+              person:name,
+              day:day,
+              time:timeOfDay,
+              activity:activity,
+              custom:customActivity
 
           }
           console.log(infoForBack)

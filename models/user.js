@@ -59,7 +59,12 @@ module.exports = function(sequelize, DataTypes){
                 allowNull: false
             }
         });
+
+        User.belongsToMany(models.Category, {
+            through: models.UserCategory
+        })
     };
 
+   
     return User;
 }
