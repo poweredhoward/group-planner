@@ -1,22 +1,7 @@
 // Dependencies
 var path = require("path");
 var db = require("../models");
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('group_planner_db', 'root', 'admin', {
-  host: 'localhost',
-  dialect: 'mysql',
 
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-
-
-  // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
-  operatorsAliases: false
-});
 // Routes
 module.exports = function(app) {
 
@@ -27,49 +12,78 @@ module.exports = function(app) {
     });
 
     app.post("/", function(req,res){
-        // console.log(req.body);
-        var start_day = req.body.dayProperty.toLowerCase() + "_start";
-        var end_day = req.body.dayProperty.toLowerCase() + "_end";
+        console.log(req.body);
+        var start_day = req.body.day.toLowerCase().split(" ")[0] + "_start";
+        var end_day = req.body.day.toLowerCase().split(" ")[0] + "_end";
+        var start = new Date();
+        var end = new Date();
+      
         console.log(start_day + " " + end_day);
-        var d = new Date();
-        console.log(d);
+        // console.log(d);
 
         var start_time;
         var end_time;
 
-        // switch(req.body.timeProperty){
-        //     case "Morning":
-        //         start_time = new Date(2018, 06, 28, 9);
-        //         end_time = new Date(2018, 06, 30, 13);
-        //         break;
-        //     case "Afternoon":
-        //         start_time = new Date(2018, 06, 28, 9);
-        //         end_time = new Date(2018, 06, 30, 13);
-        //         break;
-        //     case "Night":
-        //         start_time = new Date(2018, 06, 28, 9);
-        //         end_time = new Date(2018, 06, 30, 13);
-        //         break;
-        //     case "After Hours":
-        //         start_time = new Date(2018, 06, 28, 9);
-        //         end_time = new Date(2018, 06, 30, 13);
-        //         break;
-        // }
-        sequelize.query(
-            'INSERT INTO users SET name = ?, ? = ?, ? = ?',
-            { replacements: [req.body.personProperty, start_day, d, end_day, d],  }
-        ).then( result => {
-            res.end();
-        // console.log(projects)
-        });
-        // db.User.create({
-        //     name: req.body.personProperty,
-        //     friday_start: d,
-        //     friday_end: d
-        // }).then(result => {
-        //     // console.log(result);
-        //     res.end();
-        // })
+        switch(req.body.time){
+            case "Morning":
+                var s = new Date("June 28, 2018 09:00");
+                var e = new Date("June 28 2018 13:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+            case "Afternoon":
+                var s = new Date("June 28, 2018 13:00");
+                var e = new Date("June 28 2018 17:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+            case "Night":
+                var s = new Date("June 28, 2018 17:00");
+                var e = new Date("June 28 2018 21:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+            case "After Hours":
+                var s = new Date("June 28, 2018 21:00");
+                var e = new Date("June 28 2018 24:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+        }
+
+        var user_query = {
+            name: req.body.person,
+            [start_day]: s,
+            [end_day]: e
+        };
+
+        var category_query = {};
+        if(req.body.custom === ""){
+            category_query.name = req.body.activity;
+        }
+        else{
+            category_query.name = req.body.custom;
+        }
+
+        console.log(category_query);
+     
+        db.User.create(user_query).then(user => {
+            console.log(user);
+            db.Category.create(category_query).then(function(cat){
+                console.log(cat);
+                db.UserCategory.create({
+                    CategoryId: cat.id,
+                    UserId: user.id
+                }).then(uscat =>{
+                    console.log(uscat);
+                    res.end();
+                })
+
+            });
+            // console.log(result);
+
+        })
+        
        
     })
 
