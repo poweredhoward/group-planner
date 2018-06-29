@@ -11,8 +11,13 @@ module.exports = function(app) {
         res.sendFile(path.join(__dirname, "../public/index.html"));
     });
 
+    app.get("/newroom", function(req, res) {
+        res.sendFile(path.join(__dirname, "../public/newroom.html"));
+    });
+
     app.post("/:room/form", function(req,res){
         console.log(req.body);
+        var roomname = req.params.room;
         var start_day = req.body.day.toLowerCase().split(" ")[0] + "_start";
         var end_day = req.body.day.toLowerCase().split(" ")[0] + "_end";
         var start = new Date();
@@ -53,41 +58,44 @@ module.exports = function(app) {
 
         console.log(s);
         console.log(e);
+       
 
-
-        var user_query = {
-            name: req.body.person,
-            [start_day]: s,
-            [end_day]: e
-        };
-
-        var category_query = {};
-        if(req.body.custom === ""){
-            category_query.name = req.body.activity;
-        }
-        else{
-            category_query.name = req.body.custom;
-            category_query.isDefault = false;
-        }
-
-        console.log(category_query);
-     
-        db.User.create(user_query).then(user => {
-            // console.log(user);
-            db.Category.create(category_query).then(function(cat){
-                // console.log(cat);
-                db.UserCategory.create({
-                    CategoryId: cat.id,
-                    UserId: user.id
-                }).then(uscat =>{
-                    // console.log(uscat);
-                    res.end();
-                })
-
-            });
-            // console.log(result);
-
+        db.Room.findOne({
+            where: {
+                name: roomname
+            }
+        }).then(room =>{
+            var user_query = {
+                name: req.body.person,
+                [start_day]: s,
+                [end_day]: e,
+                RoomId: room.id
+            };
+            db.User.create(user_query).then(user => {
+                // console.log(user);
+                var category_query = {};
+                if(req.body.custom === ""){
+                    category_query.name = req.body.activity;
+                }
+                else{
+                    category_query.name = req.body.custom;
+                    category_query.isDefault = false;
+                }
+                category_query.RoomId = room.id;
+                db.Category.create(category_query).then(function(cat){
+                    // console.log(cat);
+                    db.UserCategory.create({
+                        CategoryId: cat.id,
+                        UserId: user.id
+                    }).then(uscat =>{
+                        // console.log(uscat);
+                        res.end();
+                    })
+                });
+                // console.log(result);
+            })
         })
+            
         
        
     })
@@ -104,7 +112,19 @@ module.exports = function(app) {
                 res.send("Not a real room");
             }
             else{
-                res.sendFile(path.join(__dirname, "../public/room.html"));
+                db.User.findAll({
+                    where: {
+                        RoomId: result.id
+                    },
+                    include: [{
+                        model: db.Room
+                    }] 
+                }).then(users =>{
+                    console.log(users);
+                    res.sendFile(path.join(__dirname, "../public/room.html"));
+
+                })
+
             }
         })
         
@@ -128,7 +148,5 @@ module.exports = function(app) {
     });
 
 
-    app.get("/four", function(req, res) {
-        res.sendFile(path.join(__dirname, "../public/four.html"));
-    });
+    
 };

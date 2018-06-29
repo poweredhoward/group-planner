@@ -66,9 +66,9 @@
         </div>
     
     <!-- ROUTES BUTTON TO THE ROOM PAGE -->
-    <a class="routeToRoom" href="/two">
+    <!-- <a class="routeToRoom" href="/room"> -->
         <button id='submitInfo'>ENTER!</button>
-    </a>
+    <!-- </a> -->
     
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
@@ -76,10 +76,13 @@
       crossorigin="anonymous"></script>
     
       <script>
-          var addr = $(location).attr('href').split("/");
-          addr = addr[addr.length-2]
-          console.log(addr);
-          $("#h2").append(addr);
+        var addr = $(location).attr('href').split("/");
+        addr = addr[addr.length-2];
+
+        // $(".routeToRoom").attr("href", "/" + addr);
+
+        console.log(addr);
+        $("#h2").append(addr);
 
     
         // Drop down shows options for picking a day, up to a week ahead of time
@@ -151,7 +154,7 @@
               console.log(infoForBack)
     
     
-              $.post('/'+addr+"form",infoForBack).then(function(){
+              $.post('/'+addr+"/form",infoForBack).then(function(){
                   console.log('sent!')
               }) 
             });
