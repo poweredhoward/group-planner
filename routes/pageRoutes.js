@@ -1,5 +1,6 @@
 // Dependencies
 var path = require("path");
+var db = require("../models");
 
 // Routes
 module.exports = function(app) {
@@ -11,8 +12,58 @@ module.exports = function(app) {
     });
 
     app.post("/", function(req,res){
-        console.log(req.body);
-        res.end();
+        // console.log(req.body);
+        var start_day = req.body.dayProperty.toLowerCase() + "_start";
+        var end_day = req.body.dayProperty.toLowerCase() + "_end";
+        var start = new Date();
+        var end = new Date();
+      
+        console.log(queryobj);
+        console.log(start_day + " " + end_day);
+        // console.log(d);
+
+        var start_time;
+        var end_time;
+
+        switch(req.body.timeProperty){
+            case "Morning":
+                var s = new Date("June 28, 2018 09:00");
+                var e = new Date("June 28 2018 13:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+            case "Afternoon":
+                var s = new Date("June 28, 2018 13:00");
+                var e = new Date("June 28 2018 17:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+            case "Night":
+                var s = new Date("June 28, 2018 17:00");
+                var e = new Date("June 28 2018 21:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+            case "After Hours":
+                var s = new Date("June 28, 2018 21:00");
+                var e = new Date("June 28 2018 24:00");
+                start_time = new Date(2018, 06, 28, 9);
+                end_time = new Date(2018, 06, 30, 13);
+                break;
+        }
+
+        var queryobj = {
+            name: req.body.personProperty,
+            [start_day]: s,
+            [end_day]: e
+        };
+     
+        db.User.create(queryobj).then(result => {
+            // console.log(result);
+            res.end();
+        })
+        
+       
     })
 
     app.get("/two", function(req, res) {
