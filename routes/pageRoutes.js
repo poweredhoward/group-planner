@@ -17,6 +17,7 @@ module.exports = function(app) {
 
     app.post("/:room/form", function(req,res){
         console.log(req.body);
+        var categories = req.body.activity;
         var roomname = req.params.room;
         var start_day = req.body.day.toLowerCase().split(" ")[0] + "_start";
         var end_day = req.body.day.toLowerCase().split(" ")[0] + "_end";
@@ -73,25 +74,30 @@ module.exports = function(app) {
             };
             db.User.create(user_query).then(user => {
                 // console.log(user);
-                var category_query = {};
-                if(req.body.custom === ""){
-                    category_query.name = req.body.activity;
-                }
-                else{
-                    category_query.name = req.body.custom;
-                    category_query.isDefault = false;
-                }
-                category_query.RoomId = room.id;
-                db.Category.create(category_query).then(function(cat){
-                    // console.log(cat);
-                    db.UserCategory.create({
-                        CategoryId: cat.id,
-                        UserId: user.id
-                    }).then(uscat =>{
-                        // console.log(uscat);
-                        res.end();
-                    })
+                
+
+                categories.forEach(function(category){
+                    var category_query = {};
+                    if(req.body.custom === ""){
+                        category_query.name = category;
+                    }
+                    else{
+                        category_query.name = req.body.custom;
+                        category_query.isDefault = false;
+                    }
+                    category_query.RoomId = room.id;
+                    db.Category.create(category_query).then(function(cat){
+                        // console.log(cat);
+                        db.UserCategory.create({
+                            CategoryId: cat.id,
+                            UserId: user.id
+                        }).then(uscat =>{
+                            // console.log(uscat);
+                            res.end();
+                        })
+                    });
                 });
+               
                 // console.log(result);
             })
         })

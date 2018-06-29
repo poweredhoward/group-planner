@@ -72,3 +72,46 @@ app.get("/dumb", function(req,res){
 
 //   })
 // })
+
+var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+var users=[{
+  name:"justin", monday_start:null, monday_finish:null, tuesday_start:1, tuesday_finish:3, activityInput:"soccer"},
+  {
+    name:"john", monday_start:null, monday_finish:null, tuesday_start:3, tuesday_finish:7, activityInput:"books"},
+    {
+      name:"joey", monday_start:8, monday_finish:11, tuesday_start:null, tuesday_finish:null, activityInput:"entropy"},
+      {
+        name:"jake", monday_start:10, monday_finish:1, tuesday_start:null, tuesday_finish:null, activityInput:"disorder"}
+  
+];
+
+var goodData = [];
+
+users.forEach(user=>{
+  var goodUser = {};
+  if(user.monday_start !== null){
+    goodUser.monday_start = user.monday_start;
+  }
+  if(user.monday_finish !== null){
+    goodUser.monday_finish = user.monday_finish;
+  }
+  if(user.tuesday_start !== null){
+    goodUser.tuesday_start = user.tuesday_start;
+  }
+  if(user.tuesday_finish !== null){
+    goodUser.tuesday_finish = user.tuesday_finish;
+  }
+  goodData.push(goodUser);
+
+})
+console.log(goodData);
+
+// var timeOfDay=[];
+// for(var i=0;i<users.length;i++){
+//   if(users[i].monday_start !== false){timeOfDay.push(users[i].monday_start)}
+//   if(users[i].monday_finish !== false){timeOfDay.push(users[i].monday_finish)}
+//   if(users[i].tuesday_start !== false){timeOfDay.push(users[i].tuesday_start)}
+//   if(users[i].tuesday_finish !== false){timeOfDay.push(users[i].tuesday_finish)}
+// }
+
