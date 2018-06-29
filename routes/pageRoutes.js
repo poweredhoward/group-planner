@@ -51,6 +51,10 @@ module.exports = function(app) {
                 break;
         }
 
+        console.log(s);
+        console.log(e);
+
+
         var user_query = {
             name: req.body.person,
             [start_day]: s,
@@ -63,19 +67,20 @@ module.exports = function(app) {
         }
         else{
             category_query.name = req.body.custom;
+            category_query.isDefault = false;
         }
 
         console.log(category_query);
      
         db.User.create(user_query).then(user => {
-            console.log(user);
+            // console.log(user);
             db.Category.create(category_query).then(function(cat){
-                console.log(cat);
+                // console.log(cat);
                 db.UserCategory.create({
                     CategoryId: cat.id,
                     UserId: user.id
                 }).then(uscat =>{
-                    console.log(uscat);
+                    // console.log(uscat);
                     res.end();
                 })
 

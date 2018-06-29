@@ -1,16 +1,16 @@
-module.exports = function(sequelize, DataTYpes){
+module.exports = function(sequelize, DataTypes){
     var Category = sequelize.define("Category", {
         name: {
-            type: DataTYpes.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
               len: [1]
             }
         },
-        // default: {
-        //    type:  DataTypes.BOOLEAN,
-        //    defaultValue: true
-        // }
+        isDefault: {
+           type:  DataTypes.BOOLEAN,
+           defaultValue: true
+        }
     },
         {
             timestamps: false
