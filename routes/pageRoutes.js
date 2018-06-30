@@ -106,6 +106,27 @@ module.exports = function(app) {
        
     })
 
+    //Return all categories associated with a user
+    app.get("/user/:userid", function(req, res) {
+        var userid = req.params.userid;
+        db.User.findOne({
+            where: {
+                id: userid
+            }, include: [{
+                model: db.UserCategory,
+                include:[{
+                    model: db.Category
+                }]
+            }]
+        }).then(result =>{
+            // console.log(result);
+            result.UserCategories.forEach(r => console.log(r.Category));
+            res.end();
+            
+        })
+        
+    });
+
     app.get("/:room", function(req, res) {
         var roomname = req.params.room;
         db.Room.findOne({

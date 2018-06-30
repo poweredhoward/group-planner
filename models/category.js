@@ -30,6 +30,9 @@ module.exports = function(sequelize, DataTypes){
         Category.belongsToMany(models.User, {
             through: models.UserCategory
         })
+
+        Category.hasMany(models.UserCategory);
+
     }
 
     return Category;

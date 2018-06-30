@@ -3,6 +3,11 @@ module.exports = function(sequelize, DataTypes){
 
     });    
 
+    UserCategory.associate = function(models){
+        UserCategory.belongsTo(models.User);
+        UserCategory.belongsTo(models.Category);
+    }
+
     return UserCategory;
 }
 
