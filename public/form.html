@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel='stylesheet' href='/css/style.css'>
-    <title>HOME</title>
+    <title>FORM</title>
 </head>
 <body>
     <header>
@@ -70,7 +70,12 @@
     <!-- ROUTES BUTTON TO THE ROOM PAGE -->
     <!-- <a class="routeToRoom" href="/room"> -->
         <button id='submitInfo'>ENTER!</button>
+        <br/>
+        <br/>
+        <div id="afterSubmit"></div>
     <!-- </a> -->
+    <br/>
+    <button class="routeToRoom">BACK TO ROOM PAGE</button>    
     
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
@@ -150,37 +155,53 @@
             //   if(day === '1'){day="Friday"}
             //   if(day === '2'){day="Saturday"}
             //   if(day === '3'){day="Sunday"}
-        
+            
+    
+              if(timeOfDay === '1'){timeOfDay="Morning"}
+              if(timeOfDay === '2'){timeOfDay="Afternoon"}
+              if(timeOfDay === '3'){timeOfDay="Night"}
+              if(timeOfDay === '4'){timeOfDay="After Hours"}
+    
+    //translating and grabbing from activity menu...and/or other option box
+            
+              if(activity === '1'){activity="lets go eat somewhere"}
+              if(activity === '2'){activity="catch a movie"}
+              if(activity === '3'){activity="concert"}
+              if(activity === '4'){activity="recreational sport"}
+              if(activity === '5'){activity="sporting event"}
+              if(activity === '6'){activity="museum"}
+              if(activity === '7'){activity="beach"}
+              if(activity === '8'){activity="clubbing"}
+              if(activity === '9'){activity="bar hopping"}
+              if(activity === "10"){activity="other"}
+              // custom input grab
+              if(activity === "other"){
+                  customActivity=$("#userInput").val();
+                }
+              console.log(activity)
+            
+    
+            //object to send to back-end
+              var infoForBack={
+                  person:name,
+                  day:day,
+                  time:timeOfDay,
+                  activity:activity,
+                  custom:customActivity
+    
+              }
+              console.log(infoForBack)
+    
+    
+              $.post('/'+addr+"/form",infoForBack).then(function(){
+                  console.log('sent!')
+                $("#afterSubmit").append("YOUR INFO HAS BEEN SUBMITTED! YOU MAY NOW GO BACK TO YOUR ROOM PAGE")
+              })
 
-            if(timeOfDay === '1'){timeOfDay="Morning"}
-            if(timeOfDay === '2'){timeOfDay="Afternoon"}
-            if(timeOfDay === '3'){timeOfDay="Night"}
-            if(timeOfDay === '4'){timeOfDay="After Hours"}
-
-            //translating and grabbing from activity menu...and/or other option box
-        
-            if(activity === '1'){activity="lets go eat somewhere"}
-            if(activity === '2'){activity="catch a movie"}
-            if(activity === '3'){activity="concert"}
-            if(activity === '4'){activity="recreational sport"}
-            if(activity === '5'){activity="sporting event"}
-            if(activity === '6'){activity="museum"}
-            if(activity === '7'){activity="beach"}
-            if(activity === '8'){activity="clubbing"}
-            if(activity === '9'){activity="bar hopping"}
-            if(activity === "10"){activity="other"}
-            // custom input grab
-            if(activity === "other"){
-                customActivity=$("#customActivity").val();
-            }
-            console.log(activity)
-
-            var categories = [];
-
-
-            var t = $("#userActivity :selected").each(function(){
-                categories.push($(this).text())
-            });
+                $(".routeToRoom").on('click', ()=> {
+                $(location).attr('href', '/' + addr)
+                }) 
+            
         
 
             //object to send to back-end
