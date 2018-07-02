@@ -30,20 +30,40 @@ require("./routes/pageRoutes")(app);
 db.sequelize.sync({ force: false }).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
+    var activities_available = [
+      "lets go eat somewhere",
+      "catch a movie",
+      "concert",
+      "recreational sport",
+      "sporting event",
+      "museums",
+      "beach",
+      "clubbing",
+      "bar-hopping",
+  ];
+  
+  db.Category.findAll({
+    where: {
+      isDefault: true
+    }
+  }).then(defaults => {
+    if(defaults.length <= 0){
+      activities_available.forEach(cat =>{
+        db.Category.create({
+            activity: cat,
+            isDefault: true
+        });
+  
+      })
+    }
+    
+  })
+    
+  
   });
 });
 
 
-app.post('/postRoom',(req,res)=>{
-  var room=req.body;
-  console.log(room.name)
-  db.Room.create({
-    name:room.name,
-  }).then(function(){
-    console.log('added!')
-    res.end()
-  })
- })
 
 
 var object = [{

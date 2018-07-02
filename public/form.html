@@ -44,8 +44,8 @@
     <div class='activitysInput'>
         <label>And of course...Activity:  </label>
         <!-- <input type='text' list='activities'/> -->
-        <select class='userActivity' id="userActivity" multiple>
-            <option value='1'>lets go eat somewhere</option>
+        <select class='userActivity' id="userActivity" multiple size=9>
+            <!-- <option value='1'>lets go eat somewhere</option>
             <option value='2'>catch a movie</option>
             <option value='3'>concert</option>
             <option value='4'>recreational sport</option>
@@ -54,24 +54,22 @@
             <option value='7'>beach</option>
             <option value='8'>clubbing</option>
             <option value='9'>bar-hopping</option>
-            <option value='other'>Custom Idea</option>
+            <option value='other'>Custom Idea</option> -->
         </select>
     </div>  
     
     
     <div class='otherChoiceInput'>
             <label>Users Own Choice 
-                <input type='text' id='userInput'>
-              </label>
-        </div>
+                <input type='text' id='customActivity'>
+            </label>
+            <button id="btn-addChoice">Add to list</button>
+    </div>
     
     <!-- ROUTES BUTTON TO THE ROOM PAGE -->
     <!-- <a class="routeToRoom" href="/room"> -->
         <button id='submitInfo'>ENTER!</button>
     <!-- </a> -->
-    <button id="test">
-        Test
-    </button>
     
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
@@ -82,9 +80,25 @@
 
         var addr = $(location).attr('href').split("/");
         addr = addr[addr.length-2];
+        var number_of_choices = 0;
 
-        // $(".routeToRoom").attr("href", "/" + addr);
+        var categorychoices = [];
+        $.ajax({
+            method: "GET",
+            url: "/api/form/" + addr
+        }).then(results => {
+            console.log(results);
+            results.forEach((result, index)=>{
+                number_of_choices++;
+                var option = $("<option>");
+                option.val(index);
+                option.text(result.activity);
+                $("#userActivity").append( option );
+            })
+            
+        })
 
+    
         console.log(addr);
         $("#h2").append(addr);
 
@@ -103,7 +117,16 @@
     
         ordereddays.forEach(day =>{
             $("#day").append( $("<option>").text(day) );
-        })
+        });
+
+        $("#btn-addChoice").click(function(){
+            var option = $("<option>");
+            option.val(number_of_choices);
+            option.text( $("#customActivity").val() );
+            option.attr("selected", true);
+            $("#userActivity").append( option );
+            $("#customActivity").val("");
+        });
     
           // user click to grab all the data
           $("#submitInfo").on("click",function(){
@@ -141,7 +164,7 @@
               if(activity === "10"){activity="other"}
               // custom input grab
               if(activity === "other"){
-                  customActivity=$("#userInput").val();
+                  customActivity=$("#customActivity").val();
                 }
               console.log(activity)
 

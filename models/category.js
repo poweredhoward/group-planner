@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes){
     var Category = sequelize.define("Category", {
-        name: {
+        activity: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes){
         },
         isDefault: {
            type:  DataTypes.BOOLEAN,
-           defaultValue: true
+           defaultValue: false
         }
     },
         {

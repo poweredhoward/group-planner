@@ -5,6 +5,8 @@ var db = require("../models");
 // Routes
 module.exports = function(app) {
 
+    
+
     app.get("/", function(req, res) {
         // we're using path.join here to safely combine two filepaths
         // __dirname + "/index.html" would also work
@@ -72,22 +74,24 @@ module.exports = function(app) {
                 [end_day]: e,
                 RoomId: room.id
             };
-            db.User.create(user_query).then(user => {
+            db.User.findOrCreate({
+                where :user_query
+            }).then(user => {
                 // console.log(user);
                 
-
                 categories.forEach(function(category){
                     var category_query = {};
                     if(req.body.custom === ""){
-                        category_query.name = category;
+                        category_query.activity = category;
                     }
                     else{
-                        category_query.name = req.body.custom;
+                        category_query.activity = req.body.custom;
                         category_query.isDefault = false;
                     }
                     category_query.RoomId = room.id;
-                    db.Category.create(category_query).then(function(cat){
-                        // console.log(cat);
+                    db.Category.findOrCreate({ where: category_query}).then(function(cat){
+                        console.log("New cateogry is");
+                        console.log(cat);
                         db.UserCategory.create({
                             CategoryId: cat.id,
                             UserId: user.id
@@ -104,6 +108,42 @@ module.exports = function(app) {
             
         
        
+    });
+
+    app.post('/postRoom',(req,res)=>{
+        var room=req.body;
+        console.log(room.name)
+        db.Room.findOrCreate({
+            where: {name:room.name}
+        }).then(function(){
+            console.log('added!')
+            res.end()
+        })
+    })
+      
+    
+    //Give available categories to the front end
+    app.get("/api/form/:room", (req, res)=>{
+        console.log("Asking for activities available");
+        db.Room.findOne({
+            where: {
+                name: req.params.room
+            }
+        }).then(room =>{
+            db.Category.findAll({
+                where: {
+                    $or: [
+                        {isDefault: true},
+                        {RoomId: room.id}
+                    ]
+                }
+            }).then(cats => {
+                console.log(cats);
+                res.json(cats);
+            })
+        })
+        
+        
     })
 
     //Return all categories associated with a user
