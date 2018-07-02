@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel='stylesheet' href='/css/style.css'>
+    <!-- <link rel='stylesheet' href='css/style.css'> -->
     <title>FORM</title>
 </head>
 <body>
@@ -176,22 +176,26 @@
               if(activity === "10"){activity="other"}
               // custom input grab
               if(activity === "other"){
-                  customActivity=$("#userInput").val();
+                  customActivity=$("#customActivity").val();
                 }
               console.log(activity)
-            
-    
-            //object to send to back-end
-              var infoForBack={
-                  person:name,
-                  day:day,
-                  time:timeOfDay,
-                  activity:activity,
-                  custom:customActivity
-    
-              }
-              console.log(infoForBack)
-    
+
+               var categories = [];
+
+                var t = $("#userActivity :selected").each(function(){
+                categories.push($(this).text())
+            });
+  
+     //object to send to back-end
+     var infoForBack={
+                person:name,
+                day:day,
+                time:timeOfDay,
+                activity:categories,
+                custom:customActivity
+
+            }
+            console.log(infoForBack)
     
               $.post('/'+addr+"/form",infoForBack).then(function(){
                   console.log('sent!')
@@ -204,21 +208,12 @@
             
         
 
-            //object to send to back-end
-            var infoForBack={
-                person:name,
-                day:day,
-                time:timeOfDay,
-                activity:categories,
-                custom:customActivity
-
-            }
-            console.log(infoForBack)
+           
 
 
-            $.post('/'+addr+"/form",infoForBack).then(function(){
-                console.log('sent!')
-            }) 
+            // $.post('/'+addr+"/form",infoForBack).then(function(){
+            //     console.log('sent!')
+            // }) 
         });
             
     </script>
