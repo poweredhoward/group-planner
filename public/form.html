@@ -43,7 +43,7 @@
     
     <div class='activitysInput'>
         <label>And of course...Activity:  </label>
-        <!-- <input type='text' list='activities'/> -->
+<!-- This select will be poplulated by server -->
         <select class='userActivity' id="userActivity" multiple size=9>
             <!-- <option value='1'>lets go eat somewhere</option>
             <option value='2'>catch a movie</option>
@@ -56,6 +56,7 @@
             <option value='9'>bar-hopping</option>
             <option value='other'>Custom Idea</option> -->
         </select>
+        <p>Use CTRL + Click to select multiple activities</p>
     </div>  
     
     
@@ -74,14 +75,17 @@
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
     
-      <script>
+    <script>
 
+        //Get room name from URL
         var addr = $(location).attr('href').split("/");
         addr = addr[addr.length-2];
         var number_of_choices = 0;
 
+        //Get activity options. Defaults AND custom activities for a certain room
         var categorychoices = [];
         $.ajax({
             method: "GET",
@@ -102,7 +106,7 @@
         console.log(addr);
         $("#h2").append(addr);
 
-    
+        //Possible days to have an activity
         // Drop down shows options for picking a day, up to a week ahead of time
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         var today = new Date().getDay();
@@ -119,6 +123,8 @@
             $("#day").append( $("<option>").text(day) );
         });
 
+
+        //Add a custom activity to list and select it
         $("#btn-addChoice").click(function(){
             var option = $("<option>");
             option.val(number_of_choices);
@@ -127,46 +133,47 @@
             $("#userActivity").append( option );
             $("#customActivity").val("");
         });
-    
-          // user click to grab all the data
-          $("#submitInfo").on("click",function(){
-    
-              // name, day, time of day value
-              var name=$("#leaderName").val();
-              var day=$("#day").val();
-              var timeOfDay=$("#timeOfDay").val();
-              var activity=$(".userActivity").val();
-              var customActivity=null;
-    
-    
-              // translating from the dayChoice drop-menu
+        
+        //Send info to server
+        // user click to grab all the data
+        $("#submitInfo").on("click",function(){
+
+            // name, day, time of day value
+            var name=$("#leaderName").val();
+            var day=$("#day").val();
+            var timeOfDay=$("#timeOfDay").val();
+            var activity=$(".userActivity").val();
+            var customActivity=null;
+
+
+            // translating from the dayChoice drop-menu
             //   if(day === '1'){day="Friday"}
             //   if(day === '2'){day="Saturday"}
             //   if(day === '3'){day="Sunday"}
-            
-    
-              if(timeOfDay === '1'){timeOfDay="Morning"}
-              if(timeOfDay === '2'){timeOfDay="Afternoon"}
-              if(timeOfDay === '3'){timeOfDay="Night"}
-              if(timeOfDay === '4'){timeOfDay="After Hours"}
-    
-    //translating and grabbing from activity menu...and/or other option box
-            
-              if(activity === '1'){activity="lets go eat somewhere"}
-              if(activity === '2'){activity="catch a movie"}
-              if(activity === '3'){activity="concert"}
-              if(activity === '4'){activity="recreational sport"}
-              if(activity === '5'){activity="sporting event"}
-              if(activity === '6'){activity="museum"}
-              if(activity === '7'){activity="beach"}
-              if(activity === '8'){activity="clubbing"}
-              if(activity === '9'){activity="bar hopping"}
-              if(activity === "10"){activity="other"}
-              // custom input grab
-              if(activity === "other"){
-                  customActivity=$("#customActivity").val();
-                }
-              console.log(activity)
+        
+
+            if(timeOfDay === '1'){timeOfDay="Morning"}
+            if(timeOfDay === '2'){timeOfDay="Afternoon"}
+            if(timeOfDay === '3'){timeOfDay="Night"}
+            if(timeOfDay === '4'){timeOfDay="After Hours"}
+
+            //translating and grabbing from activity menu...and/or other option box
+        
+            if(activity === '1'){activity="lets go eat somewhere"}
+            if(activity === '2'){activity="catch a movie"}
+            if(activity === '3'){activity="concert"}
+            if(activity === '4'){activity="recreational sport"}
+            if(activity === '5'){activity="sporting event"}
+            if(activity === '6'){activity="museum"}
+            if(activity === '7'){activity="beach"}
+            if(activity === '8'){activity="clubbing"}
+            if(activity === '9'){activity="bar hopping"}
+            if(activity === "10"){activity="other"}
+            // custom input grab
+            if(activity === "other"){
+                customActivity=$("#customActivity").val();
+            }
+            console.log(activity)
 
             var categories = [];
 
@@ -174,30 +181,26 @@
             var t = $("#userActivity :selected").each(function(){
                 categories.push($(this).text())
             });
-            
-    
+        
+
             //object to send to back-end
-              var infoForBack={
-                  person:name,
-                  day:day,
-                  time:timeOfDay,
-                  activity:categories,
-                  custom:customActivity
-    
-              }
-              console.log(infoForBack)
-    
-    
-              $.post('/'+addr+"/form",infoForBack).then(function(){
-                  console.log('sent!')
-              }) 
-            });
-          
+            var infoForBack={
+                person:name,
+                day:day,
+                time:timeOfDay,
+                activity:categories,
+                custom:customActivity
+
+            }
+            console.log(infoForBack)
+
+
+            $.post('/'+addr+"/form",infoForBack).then(function(){
+                console.log('sent!')
+            }) 
+        });
             
-    
-    //var activities=['lets go eat somewhere!', 'catch a movie', 'concert','recreational sport','sporting event','museums','beach','clubbing','bar-hoping']
-    
-          </script>
+    </script>
         
     </body>
 </html>

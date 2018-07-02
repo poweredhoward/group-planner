@@ -30,6 +30,8 @@ require("./routes/pageRoutes")(app);
 db.sequelize.sync({ force: false }).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
+
+    //Set default activities for all rooms, put in db
     var activities_available = [
       "lets go eat somewhere",
       "catch a movie",

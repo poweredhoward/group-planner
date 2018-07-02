@@ -17,10 +17,13 @@ module.exports = function(app) {
         res.sendFile(path.join(__dirname, "../public/newroom.html"));
     });
 
+    //Logic when user submits a form
     app.post("/:room/form", function(req,res){
         console.log(req.body);
         var categories = req.body.activity;
         var roomname = req.params.room;
+
+        //Times to be added to db
         var start_day = req.body.day.toLowerCase().split(" ")[0] + "_start";
         var end_day = req.body.day.toLowerCase().split(" ")[0] + "_end";
         var start = new Date();
@@ -29,40 +32,30 @@ module.exports = function(app) {
         console.log(start_day + " " + end_day);
         // console.log(d);
 
-        var start_time;
-        var end_time;
-
+        //Mapping time of day chosen to exact time windows
         switch(req.body.time){
             case "Morning":
                 var s = new Date("June 28, 2018 09:00");
                 var e = new Date("June 28 2018 13:00");
-                start_time = new Date(2018, 06, 28, 9);
-                end_time = new Date(2018, 06, 30, 13);
                 break;
             case "Afternoon":
                 var s = new Date("June 28, 2018 13:00");
                 var e = new Date("June 28 2018 17:00");
-                start_time = new Date(2018, 06, 28, 9);
-                end_time = new Date(2018, 06, 30, 13);
                 break;
             case "Night":
                 var s = new Date("June 28, 2018 17:00");
                 var e = new Date("June 28 2018 21:00");
-                start_time = new Date(2018, 06, 28, 9);
-                end_time = new Date(2018, 06, 30, 13);
                 break;
             case "After Hours":
                 var s = new Date("June 28, 2018 21:00");
                 var e = new Date("June 28 2018 24:00");
-                start_time = new Date(2018, 06, 28, 9);
-                end_time = new Date(2018, 06, 30, 13);
                 break;
         }
 
         console.log(s);
         console.log(e);
        
-
+        //Get room ID from room name
         db.Room.findOne({
             where: {
                 name: roomname
@@ -74,11 +67,14 @@ module.exports = function(app) {
                 [end_day]: e,
                 RoomId: room.id
             };
+
+            //Make only a unique user in the correct room
             db.User.findOrCreate({
-                where :user_query
+                where: user_query
             }).then(user => {
                 // console.log(user);
                 
+                //Make a new entry in category table if they used a custom activity
                 categories.forEach(function(category){
                     var category_query = {};
                     if(req.body.custom === ""){
@@ -89,12 +85,18 @@ module.exports = function(app) {
                         category_query.isDefault = false;
                     }
                     category_query.RoomId = room.id;
-                    db.Category.findOrCreate({ where: category_query}).then(function(cat){
+
+                    db.Category.findOrCreate({ 
+                        where: {activity: category},
+                        defaults: category_query
+                    }).then(function(cat){
                         console.log("New cateogry is");
                         console.log(cat);
+
+                        //Make new entry for every category a user chose
                         db.UserCategory.create({
-                            CategoryId: cat.id,
-                            UserId: user.id
+                            CategoryId: cat[0].id,
+                            UserId: user[0].id
                         }).then(uscat =>{
                             // console.log(uscat);
                             res.end();
@@ -110,7 +112,8 @@ module.exports = function(app) {
        
     });
 
-    app.post('/postRoom',(req,res)=>{
+    //New room
+    app.post('/api/postRoom',(req,res)=>{
         var room=req.body;
         console.log(room.name)
         db.Room.findOrCreate({
@@ -125,11 +128,13 @@ module.exports = function(app) {
     //Give available categories to the front end
     app.get("/api/form/:room", (req, res)=>{
         console.log("Asking for activities available");
+        //Find room id given room name
         db.Room.findOne({
             where: {
                 name: req.params.room
             }
         }).then(room =>{
+            //Give default activities or ones specific to the room
             db.Category.findAll({
                 where: {
                     $or: [
@@ -149,14 +154,15 @@ module.exports = function(app) {
     //Return all categories associated with a user
     app.get("/user/:userid", function(req, res) {
         var userid = req.params.userid;
+        //Link user table to category table through usercategory
         db.User.findOne({
             where: {
                 id: userid
             }, include: [{
-                model: db.UserCategory,
-                include:[{
-                    model: db.Category
-                }]
+                    model: db.UserCategory,
+                    include:[{
+                        model: db.Category
+                    }]
             }]
         }).then(result =>{
             // console.log(result);
@@ -167,6 +173,7 @@ module.exports = function(app) {
         
     });
 
+    //Get all users for a given room
     app.get("/:room", function(req, res) {
         var roomname = req.params.room;
         db.Room.findOne({
@@ -197,6 +204,7 @@ module.exports = function(app) {
         
     });
 
+    //Send form page to front end
     app.get("/:room/form", function(req, res) {
         var roomname = req.params.room;
         db.Room.findOne({
