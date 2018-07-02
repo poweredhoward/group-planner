@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel='stylesheet' href='/css/style.css'>
-    <title>HOME</title>
+    <title>FORM</title>
 </head>
 <body>
     <header>
@@ -64,11 +64,17 @@
                 <input type='text' id='userInput'>
               </label>
         </div>
+        <br/>
     
     <!-- ROUTES BUTTON TO THE ROOM PAGE -->
     <!-- <a class="routeToRoom" href="/room"> -->
         <button id='submitInfo'>ENTER!</button>
+        <br/>
+        <br/>
+        <div id="afterSubmit"></div>
     <!-- </a> -->
+    <br/>
+    <button class="routeToRoom">BACK TO ROOM PAGE</button>    
     
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
@@ -156,7 +162,12 @@
     
               $.post('/'+addr+"/form",infoForBack).then(function(){
                   console.log('sent!')
-              }) 
+                $("#afterSubmit").append("YOUR INFO HAS BEEN SUBMITTED! YOU MAY NOW GO BACK TO YOUR ROOM PAGE")
+              })
+
+                $(".routeToRoom").on('click', ()=> {
+                $(location).attr('href', '/' + addr)
+                }) 
             });
           
             

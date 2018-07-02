@@ -5,16 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+
+  <link rel="stylesheet" href="css/newRoom.css">
+  <link rel="stylesheet" href="css/footer.css">
+  
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
+	<link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+
+    <title>NEW-ROOM</title>
 </head>
 <body>
+  <header>
+    <h1 id="newRoomTitle"> START A <span id="party">PARTY</span></h1>
+    <p>
+      Every good party <span class="textBody">NEEDS</span> a name!!
+    </p>
+    <br/>
+    <input type='text' id='partyName'>
+    <br/>
+    <br/>
+    <h2><a id='enterName'>PARTY TIME!</a></h2>
+    <br/>
+    <div id="addedRoom"></div>
+    <br/>
+    <h2><a class="routeToRoom">ROOM PAGE</a></h2>
+  </header>
+
+  <footer class="footer-distributed">
+
+			<div class="footer-left">
+
+				<h3>DA<span>PARTY</span>PLANNER</h3>
+
+				<p class="footer-company-name">DA PARTY PLANNER &copy; 2018</p>
+
+				<div class="footer-icons">
+
+					<a href="#"><i class="fa fa-facebook"></i></a>
+					<a href="#"><i class="fa fa-twitter"></i></a>
+					<a href="#"><i class="fa fa-linkedin"></i></a>
+					<a href="#"><i class="fa fa-github"></i></a>
+
+				</div>
+
+			</div>
+
+			<div class="footer-right">
+
+				<p>CONTACT US</p>
+
+				<form action="#" method="post">
+
+					<input type="text" name="email" placeholder="EMAIL" />
+					<textarea name="message" placeholder="MESSAGE"></textarea>
+					<button>SEND</button>
+
+				</form>
+
+			</div>
+
+    </footer>
     
-  <h1> START A PARTY </h1>
-
-  <h3>Every good party <em>NEEDS</em> a name!!</h3>
-  <input type='text' id='partyName'>
-  <button id='enterName'>Party Time!</button>
-
   <script
   src="https://code.jquery.com/jquery-3.3.1.js"
   integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -23,19 +75,24 @@
   
   $('#enterName').on("click",()=>{
       var partyName=$("#partyName").val();
-      if(partyName === ""){alert("umm,we can do better then that!!")}
+      if(partyName === ""){alert("umm, we can do better then that!!")}
      // $.get('/partyRoomName').then(function(data){
       //    for(var i=0;i<data.length;i++){
      //         if(partyName === data[i].roomName){alert("someone beat you to that party, just spruce it up with your own personal detail")}
     //      }
+      else {
            var newRoom={
                name:partyName,
            }
           $.post('/postRoom',newRoom).then(function(){
               console.log('success!')
-          
+            $("#addedRoom").append("YOUR ROOM HAS BEEN ADDED, YOU MAY NOW" +"<span id='enterText'>" + " ENTER " +"</span>" + "YOUR ROOM!")
           })
+        $(".routeToRoom").on('click', ()=> {
+          $(location).attr('href', '/' + partyName)
         })
+      }
+    })
   //  })
       
   </script>
