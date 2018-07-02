@@ -1,0 +1,52 @@
+/* Initial file */
+
+body{background-color:#ebeb;}
+
+header{text-align:center;
+       box-shadow:2px 2px black;
+       background-color:green;
+       font-family:cursive;}
+
+.nameInput, .dayInput, .timeOfDayInput, .activitysInput, .otherChoiceInput{font-size:40px;
+                                                                           padding-top:30px;}
+
+
+
+.result{
+    height: 500px;
+    width: 400px;
+    background-color: lemonchiffon;
+} 
+
+
+/* HB Room Stylesheet */
+.roomBody{background-color:gray;
+          font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande';
+          font-size:45px;
+          text-align:center;}
+
+p:hover{color:red;}
+           
+
+.roomHBHeader{background-color:blue;
+              height:200px;
+              width:100%;
+              font-size:85px;
+              text-shadow:2px 1px black;
+              color:silver;
+              text-align:center;
+              box-shadow:3px 2px black;}
+
+#gifSpace{position:relative;
+          left:355px;}
+
+.joinRoomBox{font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande';
+             font-size:20px;
+             position:relative;
+             right:260px;
+             top:85px;}
+
+.HBRoomsBody{background-color:gray;
+             font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande';
+            font-size:45px;
+             text-align:center;}

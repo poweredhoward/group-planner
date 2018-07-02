@@ -6,3 +6,4 @@ module.exports = function(sequelize, DataTypes){
     return UserCategory;
 }
 
+// render info on person(availability, day n time)

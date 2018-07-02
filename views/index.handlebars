@@ -4,10 +4,30 @@
 
 <ul class = "result">
     {{#each users}}
-    <li>
-        <p><span class = "label"></span>Name: {{nameInput}} </p>
-        <p><span class = "label"></span>Availability: Day:{{dayInput}}  TimeOfDay:{{timeOfDayInput}}</p>
-        <p><span class = "label"></span>Activity: {{activitysInput}}</p>    
-    </li>
+  <li>Name:{{name}} 
+    <spand id='dayTimes'>Friday:{{friday_start}}-{{friday_finish}}, Saturday:{{saturday_start}}-{{saturday_finish}}, Sunday:{{sunday_start}}-{{sunday_finish}}</span></li>
+    <br>
     {{/each}}
-</ul>
+    </ul> 
+
+  
+
+<!--
+users.forEach(user=>{
+ var goodUser = {};
+ if(user.monday_start !== null){
+   goodUser.monday_start = user.monday_start;
+ }
+ if(user.monday_finish !== null){
+   goodUser.monday_finish = user.monday_finish;
+ }
+ if(user.tuesday_start !== null){
+   goodUser.tuesday_start = user.tuesday_start;
+ }
+ if(user.tuesday_finish !== null){
+   goodUser.tuesday_finish = user.tuesday_finish;
+ }
+ goodData.push(goodUser);
+
+})
+console.log(goodData); -->
