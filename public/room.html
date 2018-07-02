@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel='stylesheet' href='/css/style.css'>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="footer, contact, form, icons" />
+    
+    <link rel="stylesheet" href="css/index.css">  
+    <link rel="stylesheet" href="css/room.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  
+    <link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -16,22 +27,59 @@
 </head>
 <body>
     
-    <h1 id = "h1">Welcome to Your Room, </h1>
+    <header>
+    <h1 id = "h1">WELCOME TO YOUR ROOM : </h1>
 
-    <h2>Save this page to come back to it</h2>
-
-    <h2>Please Proceed To The Form Page to Pick What You Want To Do And When</h2>
-
-    <a class="routeToForm" id="routeToForm" href="/myroom/form">
-        <button>FORM PAGE</button>
-    </a>
-
-    <h2>If You Would Like To Create A New Room, Please Proceed Back To The Homepage</h2>
-
+    <p class="formText"><span class="textBody">SAVE</span> THIS PAGE TO COME BACK TO IT.</p> 
+    <p class="formText">PLEASE PROCEED TO THE FORM PAGE TO <span class="textBody">PICK</span> WHAT YOU WANT TO DO AND WHEN.</p>
+    <br/>
+    <h2><a class="routeToForm" id="routeToForm" href="/myroom/form">
+        FORM PAGE
+    </a></h2>
+    <br/>
+    <p class="formText">IF YOU WOULD LIKE TO <span class="textBody">CREATE</span> A NEW ROOM, PLEASE PROCEED BACK TO THE HOMEPAGE</p>
+    <br/>
     <!-- FOR TESTING ROUTING BACK TO HOME PAGE -->
-    <a class="routeToHome" href="/">
-        <button>HOME PAGE</button>
-    </a>
+    <h2><a class="routeToHome" href="/">
+        HOME PAGE
+    </a></h2>
+
+    </header>
+
+    <footer class="footer-distributed">
+
+        <div class="footer-left">
+
+            <h3>DA<span>PARTY</span>PLANNER</h3>
+
+            <p class="footer-company-name">DA PARTY PLANNER &copy; 2018</p>
+
+            <div class="footer-icons">
+
+                <a href="#"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-linkedin"></i></a>
+                <a href="#"><i class="fa fa-github"></i></a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-right">
+
+            <p>CONTACT US</p>
+
+            <form action="#" method="post">
+
+                <input type="text" name="email" placeholder="EMAIL" />
+                <textarea name="message" placeholder="MESSAGE"></textarea>
+                <button>SEND</button>
+
+            </form>
+
+        </div>
+
+    </footer>
 
     <script>
 
@@ -39,7 +87,7 @@
         var addr = $(location).attr('href').split("/");
         addr =addr[addr.length-1];
         $("#routeToForm").attr("href", "/"+addr+"/form");
-        $("#h1").append(addr);
+        $("#h1").append("<span id='specialRoom'>" + addr + "</span>");
 
     </script>
 
