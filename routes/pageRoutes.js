@@ -183,7 +183,7 @@ module.exports = function(app) {
         }).then(result =>{
             console.log(result);
             if(result === null){
-                res.send("Not a real room");
+                res.sendFile(path.join(__dirname, "../public/error.html"));
             }
             else{
                 db.User.findAll({
@@ -214,7 +214,7 @@ module.exports = function(app) {
         }).then(result =>{
             console.log(result);
             if(result === null){
-                res.send("Not a real room");
+                res.sendFile(path.join(__dirname, "../public/error.html"));
             }
             else{
                 res.sendFile(path.join(__dirname, "../public/form.html"));
