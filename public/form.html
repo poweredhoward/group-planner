@@ -115,12 +115,16 @@
         // Drop down shows options for picking a day, up to a week ahead of time
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         var today = new Date().getDay();
+        today = 4;
         var ordereddays =[];
         ordereddays[0] = days[today] + " (Today)";
-        for(var i=0; i<days.length ; i++){
+        for(var i=today; i<days.length ; i++){
             if(i !== today)
             ordereddays.push(days[i]);
         };
+        for(var i=0 ; i<today ; i++){
+            ordereddays.push(days[i]);
+        }
     
         ordereddays.push(days[today] + " (Next Week)");
     
