@@ -38,9 +38,7 @@
         <div class='dayInput'> 
             <label>Pick a Day: </label>
             <select id='day'> 
-                <!-- <option value='1'>Friday</option>
-                <option value='2'>Saturday</option>
-                <option value='3'>Sunday</option> -->
+                
             </select>
         </div>
         <br>
@@ -69,16 +67,6 @@
         <br/>
 <!-- This select will be poplulated by server -->
         <select class='userActivity' id="userActivity" multiple size=5>
-            <!-- <option value='1'>lets go eat somewhere</option>
-            <option value='2'>catch a movie</option>
-            <option value='3'>concert</option>
-            <option value='4'>recreational sport</option>
-            <option value='5'>sporting event</option>
-            <option value='6'>museums</option>
-            <option value='7'>beach</option>
-            <option value='8'>clubbing</option>
-            <option value='9'>bar-hopping</option>
-            <option value='other'>Custom Idea</option> -->
         </select>
         <br/>
         <p>USE <span class="textBody">CTRL</span> + <span class="textBody">CLICK</span> TO SELECT MULTIPLE ACTIVITIES</p>
@@ -101,7 +89,7 @@
     <h2><a class="routeToRoom">BACK TO ROOM PAGE</a></h2>    
     </header>
 
-    <footer class="footer-distributed">
+    <!-- <footer class="footer-distributed">
 
         <div class="footer-left">
 
@@ -134,7 +122,7 @@
 
         </div>
 
-    </footer>
+    </footer> -->
 
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
@@ -256,10 +244,7 @@
             // name, day, time of day value
             var name=$("#leaderName").val();
             var day=$("#day").val();
-            //var timeOfDay=$("#timeOfDay").val();
-            // var activity=$("#userActivity").val();
-            // var customActivity=null;
-
+           
 
             var chosen_categories = [];
 
@@ -267,15 +252,6 @@
                 chosen_categories.push($(this).text())
             });
   
-            //object to send to back-end
-            // var infoForBack={
-            //     person:name,
-            //     day:day,
-            //     time:timeOfDay,
-            //     activity:chosen_categories,
-            //     custom:customActivity
-
-            // }
 
             var infoForBack={
                 person:name,
