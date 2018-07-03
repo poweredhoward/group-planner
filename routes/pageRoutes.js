@@ -322,27 +322,70 @@ module.exports = function(app) {
 
 
     //Return all categories associated with a user
-    app.get("/user/:userid", function(req, res) {
-        var userid = req.params.userid;
+    app.get("/:room", function(req, res) {
+        var room = req.params.room;
         //Link user table to category table through usercategory
-        db.User.findOne({
-            where: {
-                id: userid
-            }, include: [{
-                    model: db.UserCategory,
-                    include:[{
-                        model: db.Category
-                    }]
-            }],
-            raw: true
-        }).then(result =>{
             // console.log(result);
-            result.UserCategories.forEach(r => console.log(r.Category));
-            res.end();
             
+            
+        
+            // for (var i = 0; i < results.UserCategories.length; i++){
+            //     console.log(results.UserCategories[i].activity, "category")
+                
+            // }
+            // console.log(activities, "here are the activites")
+            //   res.render("index", {activities:results});
+    
+        
+        var userlist = [];
+        db.Room.findOne({
+            where: {name: room}
+        }).then(room =>{
+            db.User.findAll({
+                where: {RoomId: room.id}
+            }).then(function(allusers){
+                allusers.forEach( user =>{
+                    var userobj = {};
+                    var activities = [];
+    
+                    db.User.findOne({
+                        where: {
+                            id: user.id
+                        }, include: [{
+                                model: db.UserCategory,
+                                include:[{
+                                    model: db.Category
+                                }]
+                        }]
+                        
+                    }).then(categories =>{
+                        categories.UserCategories.forEach(cat => activities.push(cat.Category.activity));
+                        console.log("user: " + user.name);
+                        console.log("categories: " + activities);
+                        userobj.user = user;
+                        userobj.activities = activities;
+                        userlist.push(userobj);
+                        console.log("userlist:");
+                        // console.log(userlist);
+    
+    
+                    })
+                })
+               
+                
+                setTimeout(function(){
+                    res.render("index", {users: userlist});
+                }, 1000)
+                // console.log(oneuser.Category.activity, "dataactivity")
+                
+                
+            })
         })
         
+    
     });
+
+
 
     //Get all users for a given room
     app.get("/:room", function(req, res) {
@@ -423,6 +466,4 @@ module.exports = function(app) {
             }
           });   
     })
-
-    
-};
+}
