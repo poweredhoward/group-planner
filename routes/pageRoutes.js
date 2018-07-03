@@ -1,6 +1,7 @@
 // Dependencies
 var path = require("path");
 var db = require("../models");
+var nodemailer = require('nodemailer');
 
 // Routes
 module.exports = function(app) {
@@ -394,7 +395,34 @@ module.exports = function(app) {
             }
         })
     });
+    
+    //route to send email
 
+    app.post("/sendMail", function(req, res){
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'group18planner@gmail.com',
+              pass: 'group-planner1!'
+            }
+          });
+
+          var mailOptions = {
+            from: 'group18planner@gmail.com',
+            to: req.body.to,
+            subject: 'YOUR PERSONALIZED URL FROM GROUP-PLANNER!',
+            text: req.body.text
+          };
+
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+              res.send("Email sent!")
+            }
+          });   
+    })
 
     
 };

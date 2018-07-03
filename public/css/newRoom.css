@@ -25,3 +25,14 @@ p {
 #enterText {
 	color: #F05283;
 }
+
+#textApp {
+    color: rgb(163, 30, 163);
+    text-align: center;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.sent {
+	color: #F05283;
+}
