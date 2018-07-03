@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes){
             }
         },
         monday_time: {
-            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night")
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         },
         // monday_end: {
         //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes){
         // defaultValue: null,
         // },
         saturday_time: {
-            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night")        
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")        
         },
         // saturday_end: {
         //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),

@@ -82,14 +82,16 @@ module.exports = function(app) {
         db.Room.findOne({
             where: {
                 name: roomname
-            }
+            },
+            raw: true
         }).then(room =>{
             
             user_query.RoomId = room.id;
 
             //Make only a unique user in the correct room
             db.User.findOrCreate({
-                where: user_query
+                where: user_query,
+                raw: true
             }).then(user => {
                 // console.log(user);
                 
@@ -107,7 +109,8 @@ module.exports = function(app) {
 
                     db.Category.findOrCreate({ 
                         where: {activity: category},
-                        defaults: category_query
+                        defaults: category_query,
+                        raw: true
                     }).then(function(cat){
                         console.log("New cateogry is");
                         console.log(cat);
@@ -136,7 +139,8 @@ module.exports = function(app) {
         var room=req.body;
         console.log(room.name)
         db.Room.findOrCreate({
-            where: {name:room.name}
+            where: {name:room.name},
+            raw: true
         }).then(function(){
             console.log('added!')
             res.end()
@@ -151,7 +155,8 @@ module.exports = function(app) {
         db.Room.findOne({
             where: {
                 name: req.params.room
-            }
+            },
+            raw: true
         }).then(room =>{
             //Give default activities or ones specific to the room
             db.Category.findAll({
@@ -160,7 +165,8 @@ module.exports = function(app) {
                         {isDefault: true},
                         {RoomId: room.id}
                     ]
-                }
+                },
+                raw: true
             }).then(cats => {
                 console.log(cats);
                 res.json(cats);
@@ -169,6 +175,84 @@ module.exports = function(app) {
         
         
     })
+
+    //Print all users in a room
+    app.get("/:room/users", function(req, res){
+        db.User.findAll({
+            where: { RoomId: req.params.room },
+            raw: true
+        }).then(users=>{
+            console.log(users);
+
+            //Get optimal category
+            var category_count = {};
+            users.forEach( function(user){
+                
+                db.UserCategory.findAll({
+                    where: {UserId: user.id},
+                    raw: true
+                }).then(categories => {
+                    console.log("These are the categories chosen by "+ user.name )
+                    // console.log(categories);
+                    categories.forEach(category =>{
+                        if(category.CategoryId in category_count){
+                            category_count[category.CategoryId] += 1;
+                        } else{
+                            category_count[category.CategoryId] = 1;
+                        }
+                    });
+
+                    console.log("Category count: ");
+
+                    //The object with the categories!!!
+                    console.log(category_count);
+                    res.end();
+                });
+            });
+        })
+    });
+
+    
+
+    app.get("/:room/userstimes", function(req, res){
+
+        function entryToNum(entry){
+            
+        }
+
+        // var count_matrix = [];
+        console.log(db.User.rawAttributes.monday_time.values);
+        db.User.findAll({
+            where: {RoomId: req.params.room},
+            raw: true
+        }).then(users =>{
+
+            // //Set up count matrix
+            // users.forEach(user => {
+            //     console.log(user);
+            //     var userArray = [];
+            //     for(field in user){
+            //         // console.log(field)
+            //         if(field.split("_")[1] === "time"){
+            //             userArray.push(0);
+            //         }
+                    
+            //     }
+            //     count_matrix.push(userArray);
+            // });
+            // console.log(count_matrix);
+
+            //Populate count matrix with values
+            users.forEach((user, col_num) =>{
+                
+            })
+
+            res.end();
+        })
+    })
+
+
+
 
     //Return all categories associated with a user
     app.get("/user/:userid", function(req, res) {
@@ -182,7 +266,8 @@ module.exports = function(app) {
                     include:[{
                         model: db.Category
                     }]
-            }]
+            }],
+            raw: true
         }).then(result =>{
             // console.log(result);
             result.UserCategories.forEach(r => console.log(r.Category));
@@ -198,7 +283,8 @@ module.exports = function(app) {
         db.Room.findOne({
             where: {
                 name: roomname
-            }
+            },
+            raw: true
         }).then(result =>{
             console.log(result);
             if(result === null){
@@ -211,7 +297,8 @@ module.exports = function(app) {
                     },
                     include: [{
                         model: db.Room
-                    }] 
+                    }],
+                    raw: true
                 }).then(users =>{
                     console.log(users);
                     res.sendFile(path.join(__dirname, "../public/room.html"));
@@ -229,7 +316,8 @@ module.exports = function(app) {
         db.Room.findOne({
             where: {
                 name: roomname
-            }
+            },
+            raw: true
         }).then(result =>{
             console.log(result);
             if(result === null){
