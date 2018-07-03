@@ -1,0 +1,110 @@
+@font-face {
+    font-family: pasa;
+    src: url(../images/Pasajero.otf);
+}
+
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+*{
+	padding:0;
+	margin:0;
+}
+
+html{
+	background: url(../images/bg.png);
+	background-position: center top;
+}
+
+body{
+	font:14px/1.5 Arial, Helvetica, sans-serif;
+}
+
+header{
+	text-align: center;
+	margin-bottom:100px;
+}
+
+header h1{
+	font-family: pasa;
+	font-size: 80px;
+	color: rgb(163, 30, 163); 
+}
+
+#party {
+	color: #F05283;
+}
+
+p {
+	color: rgb(163, 30, 163);
+	text-align: center;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+.textBody {
+	color: #F05283;
+}
+
+header h2{
+	color: #F05283;
+}
+
+header h2 a{
+	color:inherit;
+	text-decoration: none;
+	display: inline-block;
+	border: 1px solid #F05283;
+	padding: 10px 15px;
+	border-radius: 3px;
+	font: bold 14px/1 'Open Sans', sans-serif;
+	text-transform: uppercase;
+}
+
+header h2 a:hover{
+	background-color:#F05283;
+	transition:0.2s;
+	color:#fff;
+}
+
+.partyText {
+    font-size: 30px;
+	color: rgb(163, 30, 163);
+	text-align: center;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+#specialRoom {
+    color: #F05283;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.nameInput, .dayInput, .timeOfDayInput, .activitysInput, .otherChoiceInput {
+    font-size: 18px;
+	color: rgb(163, 30, 163);
+	text-align: center;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+#leaderName, #day, #timeOfDay, #userActivity, #customActivity {
+    font-size: 16px;
+}
+
+#btn-addChoice {
+    margin-bottom: 2px;
+}
+
+#afterSubmit {
+    font-family: pasa;
+    font-size: 20px;
+    color: rgb(163, 30, 163);
+    text-align: center;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+footer{
+	position: fixed;
+	bottom: 0;
+}

@@ -1,0 +1,11 @@
+.formText {
+    color: rgb(163, 30, 163);
+	text-align: center;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+#specialRoom {
+    color: #F05283;
+    font-family: Arial, Helvetica, sans-serif;
+}
