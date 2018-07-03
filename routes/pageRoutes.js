@@ -215,9 +215,43 @@ module.exports = function(app) {
     
 
     app.get("/:room/userstimes", function(req, res){
+        var num_days = 7;
+        var count_obj = {};
+        function entryToNum(category, daynum){
+            var enumm = db.User.rawAttributes.monday_time.values;
+            var multipliers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+            var values = multipliers[enumm.indexOf(category)];
+            var day = multipliers[multipliers.length -1 - daynum];
+            console.log("values: "+ values)
+            console.log("day: " + day)
+            var hashnum =  values * day;
+            var hashnums = {};
+            if(hashnum in count_obj){
+                count_obj[hashnum].count += 1;
+                // hashnums.count += 1;
+                
+            } else {
+                // count_obj[hashnum] = 1;
+                hashnums.count = 1;
+                hashnums.valuenum = values;
+                hashnums.daynum = day;
+                count_obj[hashnum] = hashnums;
+            }
+           
+        }
+        var days_of_week = [];
 
-        function entryToNum(entry){
-            
+        function numToEntry(hashnum){
+            var enumm = db.User.rawAttributes.monday_time.values;
+            var multipliers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+            var valuenum = count_obj[hashnum].valuenum
+            var value = enumm[multipliers.indexOf(valuenum)];
+            var daynum = count_obj[hashnum].daynum;
+            var day = days_of_week[ multipliers.length -1 - multipliers.indexOf(daynum) ];
+            // multipliers[ multipliers.length -1 - multipliers.indexOf(daynum) ];
+            var best_day_time = {time: value, day: day };
+            return best_day_time;
+
         }
 
         // var count_matrix = [];
@@ -227,26 +261,58 @@ module.exports = function(app) {
             raw: true
         }).then(users =>{
 
-            // //Set up count matrix
-            // users.forEach(user => {
-            //     console.log(user);
-            //     var userArray = [];
-            //     for(field in user){
-            //         // console.log(field)
-            //         if(field.split("_")[1] === "time"){
-            //             userArray.push(0);
-            //         }
+            
+            //Set up count matrix
+            /*users.forEach((user, col_num) => {
+                console.log(user);
+                // var userArray = [];
+                for(field in user){
+                    // console.log(field)
+                    if(field.split("_")[1] === "time"){
+                        // userArray.push(0);
+                        //entryToNum(user[field], col_num);
+                        days_of_week.push((field.split("_")[0]));
+
+
+                    }
                     
-            //     }
-            //     count_matrix.push(userArray);
-            // });
-            // console.log(count_matrix);
+                }
+                //count_matrix.push(userArray);
+            });*/
 
-            //Populate count matrix with values
-            users.forEach((user, col_num) =>{
+            for(field in users[0]){
+                // console.log(field)
+                if(field.split("_")[1] === "time"){
+                    // userArray.push(0);
+                    //entryToNum(user[field], col_num);
+                    days_of_week.push((field.split("_")[0]));
+                }
                 
-            })
+            }
 
+            console.log(days_of_week);
+
+            users.forEach(user =>{
+                for(var i=0 ; i<days_of_week.length ; i++){
+                    var d = days_of_week[i] + "_time";
+                    entryToNum(user[d], i);
+                }
+            })
+            // console.log(count_matrix);
+            console.log(count_obj);
+
+            var max_hash = 0;
+            var max_count = 0;
+            for(hash in count_obj){
+                if(count_obj[hash].count > max_count){
+                    max_hash = hash;
+                    max_count = count_obj[hash].count;
+                }
+            }
+
+            console.log(numToEntry(max_hash));
+
+            
             res.end();
         })
     })
