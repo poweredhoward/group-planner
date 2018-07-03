@@ -31,6 +31,13 @@
     <div id="addedRoom"></div>
     <br/>
     <h2><a class="routeToRoom">ROOM PAGE</a></h2>
+    <br/>
+    <div id="textApp">PLEASE ENTER YOUR EMAIL TO GET YOUR PERSONALIZED URL : 
+      <input type="text" id="email">
+      <h2><a id="emailButton">SUBMIT</a></h2>
+      <div id="emailSent"></div>
+    </div>
+
   </header>
 
   <footer class="footer-distributed">
@@ -87,10 +94,23 @@
            }
           $.post('/api/postRoom',newRoom).then(function(){
               console.log('success!')
-            $("#addedRoom").append("YOUR ROOM HAS BEEN ADDED, YOU MAY NOW" +"<span id='enterText'>" + " ENTER " +"</span>" + "YOUR ROOM!")
+            $("#addedRoom").append(`YOUR ROOM HAS BEEN ADDED, YOU MAY NOW <a href=/${partyName}><span id='enterText'>ENTER</span></a>YOUR ROOM!`)
           })
         $(".routeToRoom").on('click', ()=> {
           $(location).attr('href', '/' + partyName)
+        })
+
+        $("#emailButton").on("click", () => {
+          var to = $("#email").val();
+          var text = "SEND THIS URL TO YOUR FRIENDS, SO YOU GUYS CAN START PLANNING YOUR NEXT ADVENTURE!! localhost:8888/" + partyName
+          
+
+          $.post("/sendMail", {
+            to:to,
+            text:text
+          }).then(function(data){
+            $("#emailSent").append("YOUR EMAIL HAS BEEN " + "<span class='sent'>" + "SENT!" + "</span>" + " PLEASE PROCEED TO YOUR " + "<span class='sent'>" + "ROOM!" + "</span>");
+          })
         })
       }
     })

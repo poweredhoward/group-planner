@@ -1,6 +1,7 @@
 // Dependencies
 var path = require("path");
 var db = require("../models");
+var nodemailer = require('nodemailer');
 
 // Routes
 module.exports = function(app) {
@@ -335,8 +336,8 @@ module.exports = function(app) {
 
 
     //Return all categories associated with a user
-    app.get("/user/:userid", function(req, res) {
-        var userid = req.params.userid;
+    app.get("/:room", function(req, res) {
+        var room = req.params.room;
         //Link user table to category table through usercategory
         db.User.findOne({
             where: {
@@ -351,44 +352,101 @@ module.exports = function(app) {
         }).then(result =>{
             // console.log(result);
             result.UserCategories.forEach(r => console.log(r.Category.activity));
-            res.end();
+            // res.end();
             
-        })
+            
         
-    });
-
-    //Get all users for a given room
-    app.get("/:room", function(req, res) {
-        var roomname = req.params.room;
+            // for (var i = 0; i < results.UserCategories.length; i++){
+            //     console.log(results.UserCategories[i].activity, "category")
+                
+            // }
+            // console.log(activities, "here are the activites")
+            //   res.render("index", {activities:results});
+    
+        
+        var userlist = [];
         db.Room.findOne({
-            where: {
-                name: roomname
-            },
-            raw: true
-        }).then(result =>{
-            // console.log(result);
-            if(result === null){
-                res.sendFile(path.join(__dirname, "../public/error.html"));
-            }
-            else{
-                db.User.findAll({
-                    where: {
-                        RoomId: result.id
-                    },
-                    include: [{
-                        model: db.Room
-                    }],
-                    raw: true
-                }).then(users =>{
-                    // console.log(users);
-                    res.sendFile(path.join(__dirname, "../public/room.html"));
-
+            where: {name: room}
+        }).then(room =>{
+            db.User.findAll({
+                where: {RoomId: room.id}
+            }).then( function(allusers){
+                allusers.forEach( user =>{
+                    var userobj = {};
+                    var activities = [];
+    
+                    db.User.findOne({
+                        where: {
+                            id: user.id
+                        }, include: [{
+                                model: db.UserCategory,
+                                include:[{
+                                    model: db.Category
+                                }]
+                        }]
+                        
+                    }).then(categories =>{
+                        categories.UserCategories.forEach(cat => activities.push(cat.Category.activity));
+                        console.log("user: " + user.name);
+                        console.log("categories: " + activities);
+                        userobj.user = user;
+                        userobj.activities = activities;
+                        userlist.push(userobj);
+                        console.log("userlist:");
+                        // console.log(userlist);
+    
+    
+                    })
                 })
-
-            }
+               
+                
+                setTimeout(function(){
+                    res.render("index", {users: userlist});
+                }, 1000)
+                // console.log(oneuser.Category.activity, "dataactivity")
+                
+                
+            })
         })
         
+    
     });
+    })
+
+
+
+    // //Get all users for a given room
+    // app.get("/:room", function(req, res) {
+    //     var roomname = req.params.room;
+    //     db.Room.findOne({
+    //         where: {
+    //             name: roomname
+    //         },
+    //         raw: true
+    //     }).then(result =>{
+    //         // console.log(result);
+    //         if(result === null){
+    //             res.sendFile(path.join(__dirname, "../public/error.html"));
+    //         }
+    //         else{
+    //             db.User.findAll({
+    //                 where: {
+    //                     RoomId: result.id
+    //                 },
+    //                 include: [{
+    //                     model: db.Room
+    //                 }],
+    //                 raw: true
+    //             }).then(users =>{
+    //                 // console.log(users);
+    //                 res.sendFile(path.join(__dirname, "../public/room.html"));
+
+    //             })
+
+    //         }
+    //     })
+        
+    // });
 
     //Send form page to front end
     app.get("/:room/form", function(req, res) {
@@ -408,7 +466,32 @@ module.exports = function(app) {
             }
         })
     });
-
-
     
-};
+    //route to send email
+
+    app.post("/sendMail", function(req, res){
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'group18planner@gmail.com',
+              pass: 'group-planner1!'
+            }
+          });
+
+          var mailOptions = {
+            from: 'group18planner@gmail.com',
+            to: req.body.to,
+            subject: 'YOUR PERSONALIZED URL FROM GROUP-PLANNER!',
+            text: req.body.text
+          };
+
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+              res.send("Email sent!")
+            }
+          }); 
+        });
+    }
