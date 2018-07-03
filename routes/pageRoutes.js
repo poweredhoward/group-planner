@@ -321,27 +321,70 @@ module.exports = function(app) {
 
 
     //Return all categories associated with a user
-    app.get("/user/:userid", function(req, res) {
-        var userid = req.params.userid;
+    app.get("/:room", function(req, res) {
+        var room = req.params.room;
         //Link user table to category table through usercategory
-        db.User.findOne({
-            where: {
-                id: userid
-            }, include: [{
-                    model: db.UserCategory,
-                    include:[{
-                        model: db.Category
-                    }]
-            }],
-            raw: true
-        }).then(result =>{
             // console.log(result);
-            result.UserCategories.forEach(r => console.log(r.Category));
-            res.end();
             
+            
+        
+            // for (var i = 0; i < results.UserCategories.length; i++){
+            //     console.log(results.UserCategories[i].activity, "category")
+                
+            // }
+            // console.log(activities, "here are the activites")
+            //   res.render("index", {activities:results});
+    
+        
+        var userlist = [];
+        db.Room.findOne({
+            where: {name: room}
+        }).then(room =>{
+            db.User.findAll({
+                where: {RoomId: room.id}
+            }).then(function(allusers){
+                allusers.forEach( user =>{
+                    var userobj = {};
+                    var activities = [];
+    
+                    db.User.findOne({
+                        where: {
+                            id: user.id
+                        }, include: [{
+                                model: db.UserCategory,
+                                include:[{
+                                    model: db.Category
+                                }]
+                        }]
+                        
+                    }).then(categories =>{
+                        categories.UserCategories.forEach(cat => activities.push(cat.Category.activity));
+                        console.log("user: " + user.name);
+                        console.log("categories: " + activities);
+                        userobj.user = user;
+                        userobj.activities = activities;
+                        userlist.push(userobj);
+                        console.log("userlist:");
+                        // console.log(userlist);
+    
+    
+                    })
+                })
+               
+                
+                setTimeout(function(){
+                    res.render("index", {users: userlist});
+                }, 1000)
+                // console.log(oneuser.Category.activity, "dataactivity")
+                
+                
+            })
         })
         
+    
     });
+
+
 
     //Get all users for a given room
     app.get("/:room", function(req, res) {
@@ -395,6 +438,74 @@ module.exports = function(app) {
         })
     });
 
+    app.get("/justin/bryan", function(req,res){
+       db.User.findAll({}).then(function(results){
+            // console.log(results,"this is our data");
+            // console.log(results[0].name, "this is the first entry");
+            var arraynames = [];
+            var arrayMonday = [];
+            var arrayTuesday = [];
+            var arrayWednesday = [];
+            var arrayThursday = [];
+            var arrayFriday = [];
+            var arraySaturday = [];
+            var arraySunday = [];
+            for (var i = 0; i < results.length; i++){
+                arraynames.push(results[i].name);
+                if(results[i].monday_time !== ""){
+                arrayMonday.push(results[i].monday_time)
+            }
+                if(results[i].tuesday_time !== ""){
+                arrayTuesday.push(results[i].tuesday_time)
+            }
+                if(results[i].wednesday_time !== ""){
+                arrayWednesday.push(results[i].wednesday_time)
+            }
+                if(results[i].thursday_time !== ""){
+                arrayThursday.push(results[i].thursday_time)
+            }
+                if(results[i].friday_time !== ""){
+                arrayFriday.push(results[i].friday_time)
+            }
+                if(results[i].saturday_time !== ""){
+                arraySaturday.push(results[i].saturday_time)
+            }
+                if(results[i].sunday_time !== ""){
+                arraySunday.push(results[i].sunday_time)
+            }
+        }
+            console.log(arraynames, "this is your array output");
+            
+            console.log(arrayMonday, 'these are our monday dates');
+            console.log(arrayTuesday, 'these are our tuesday dates');
+            console.log(arrayWednesday, 'these are our wednesday dates');
+            console.log(arrayThursday, 'these are our thursday dates');
+            console.log(arrayFriday, 'these are our friday dates');
+            console.log(arraySaturday, 'these are our saturday dates');
+            console.log(arraySunday, 'these are our sunday dates');
+
+            res.render("index", {users:results})
+            
+//         //     var times = [];
+
+//         //     console.log(arraynames) */
+// res.render('index',{person:people})
+//         // });
+
 
     
-};
+// });
+})})};
+
+// var people=[{
+//     name:"bryan"
+// },
+// {
+//     name:"justin",
+// },
+// {
+//     name:"matt",
+// },
+// {
+//     name:'vanessa'
+// }]}

@@ -1,13 +1,66 @@
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 <h1>Results:</h1>
 
-<ul class = "result">
-    {{#each users}}
-    <li>
-        <p><span class = "label"></span>Name: {{nameInput}} </p>
-        <p><span class = "label"></span>Availability: Day:{{dayInput}}  TimeOfDay:{{timeOfDayInput}}</p>
-        <p><span class = "label"></span>Activity: {{activitysInput}}</p>    
-    </li>
-    {{/each}}
-</ul>
+
+    <table class="table table-bordered">
+    <thead>
+      <h2>  <th>Name</th>
+        <th>Activity</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+    </thead>
+    <tbody>
+        {{#each users}}
+       <tr><td> {{user.name}}</td>
+        {{!-- {{ activity}} --}}
+        {{!-- {{#each activities}} --}}
+       <td>{{activities}}</td>
+        {{!-- {{/each}} --}}
+       {{!-- {{/each}} --}}
+       <td> {{user.monday_time}}</td>
+       <td> {{user.tuesday_time}}</td>
+       <td> {{user.wednesday_time}}</td>
+       <td> {{user.thursday_time}}</td>
+       <td> {{user.friday_time}}</td>
+       <td> {{user.saturday_time}}</td>
+       <td> {{user.sunday_time}}</td></tr> </h2>
+       {{/each}}
+    </tbody>
+</table>
+
+
+{{!-- <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table> --}}
