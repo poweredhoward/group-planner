@@ -339,29 +339,29 @@ module.exports = function(app) {
     app.get("/:room", function(req, res) {
         var room = req.params.room;
         //Link user table to category table through usercategory
-        db.User.findOne({
-            where: {
-                id: userid
-            }, include: [{
-                    model: db.UserCategory,
-                    include:[{
-                        model: db.Category
-                    }]
-            }]
+        // db.User.findOne({
+        //     where: {
+        //         id: userid
+        //     }, include: [{
+        //             model: db.UserCategory,
+        //             include:[{
+        //                 model: db.Category
+        //             }]
+        //     }]
             
-        }).then(result =>{
-            // console.log(result);
-            result.UserCategories.forEach(r => console.log(r.Category.activity));
-            // res.end();
+        // }).then(result =>{
+        //     // console.log(result);
+        //     result.UserCategories.forEach(r => console.log(r.Category.activity));
+        //     // res.end();
             
             
         
-            // for (var i = 0; i < results.UserCategories.length; i++){
-            //     console.log(results.UserCategories[i].activity, "category")
+        //     // for (var i = 0; i < results.UserCategories.length; i++){
+        //     //     console.log(results.UserCategories[i].activity, "category")
                 
-            // }
-            // console.log(activities, "here are the activites")
-            //   res.render("index", {activities:results});
+        //     // }
+        //     // console.log(activities, "here are the activites")
+        //     //   res.render("index", {activities:results});
     
         
         var userlist = [];
@@ -411,7 +411,7 @@ module.exports = function(app) {
         
     
     });
-    })
+    
 
 
 
