@@ -213,7 +213,21 @@ module.exports = function(app) {
                 });
 
                 setTimeout(function (){
-                    res.json(category_count);
+                    var max_count = 0;
+                    var max_key = 0;
+                    for(cat in category_count){
+                        if(category_count[cat] > max_count){
+                            max_count = category_count[cat];
+                            max_key = cat;
+                        }
+                        
+                    }
+                    db.Category.findOne({
+                        where: {id: max_key}
+                    }).then(result =>{
+                        res.json({category: result.activity, count: max_count});
+                    })
+                    
                 },1000)
                 
             })
