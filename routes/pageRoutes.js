@@ -22,38 +22,61 @@ module.exports = function(app) {
         console.log(req.body);
         var categories = req.body.activity;
         var roomname = req.params.room;
+        var times = req.body.times;
 
-        //Times to be added to db
-        var start_day = req.body.day.toLowerCase().split(" ")[0] + "_start";
-        var end_day = req.body.day.toLowerCase().split(" ")[0] + "_end";
-        var start = new Date();
-        var end = new Date();
-      
-        console.log(start_day + " " + end_day);
-        // console.log(d);
+        console.log("Times: ");
+        console.log(times);
 
-        //Mapping time of day chosen to exact time windows
-        switch(req.body.time){
-            case "Morning":
-                var s = new Date("June 28, 2018 09:00");
-                var e = new Date("June 28 2018 13:00");
-                break;
-            case "Afternoon":
-                var s = new Date("June 28, 2018 13:00");
-                var e = new Date("June 28 2018 17:00");
-                break;
-            case "Night":
-                var s = new Date("June 28, 2018 17:00");
-                var e = new Date("June 28 2018 21:00");
-                break;
-            case "After Hours":
-                var s = new Date("June 28, 2018 21:00");
-                var e = new Date("June 28 2018 24:00");
-                break;
+        //Add time windows for each person
+        var user_query = {
+            name: req.body.person            
+        };
+
+        for( day in times){
+            // var s = null;
+            // var e = null;
+            //Mapping time of day chosen to exact time windows
+            // switch(times[day]){
+            //     case "Morning":
+            //         s = new Date("June 28, 2018 09:00");
+            //         e = new Date("June 28 2018 13:00");
+            //         break;
+            //     case "Afternoon":
+            //         s = new Date("June 28, 2018 13:00");
+            //         e = new Date("June 28 2018 17:00");
+            //         break;
+            //     case "Evening":
+            //         s = new Date("June 28, 2018 17:00");
+            //         e = new Date("June 28 2018 21:00");
+            //         break;
+            //     case "Late Night":
+            //         s = new Date("June 28, 2018 21:00");
+            //         e = new Date("June 28 2018 24:00");
+            //         break;
+            // }
+            // var start_day = day + "_start";
+            // var end_day = day + "_end";
+            var day_time = day + "_time";
+
+            // if(s !== null && e !== null){
+                // user_query[start_day] = s;
+                // user_query[end_day] = e;
+            user_query[day_time] = times[day];
+            // }
+            
         }
+        console.log("This is the user query: ");
+        console.log(user_query);
 
-        console.log(s);
-        console.log(e);
+        // var user_query = {
+        //     name: req.body.person,
+        //     [start_day]: s,
+        //     [end_day]: e,
+            
+        // };
+
+        // console.log(s);
+        // console.log(e);
        
         //Get room ID from room name
         db.Room.findOne({
@@ -61,12 +84,8 @@ module.exports = function(app) {
                 name: roomname
             }
         }).then(room =>{
-            var user_query = {
-                name: req.body.person,
-                [start_day]: s,
-                [end_day]: e,
-                RoomId: room.id
-            };
+            
+            user_query.RoomId = room.id;
 
             //Make only a unique user in the correct room
             db.User.findOrCreate({

@@ -41,8 +41,8 @@
             <select id='timeOfDay'>
                     <option value='1'>Morning</option>
                     <option value='2'>Afternoon</option>
-                    <option value='3'>Night</option>
-                    <option value='4'>After Hours</option>
+                    <option value='3'>Evening</option>
+                    <option value='4'>Late Night</option>
             </select>
         </div>
 
@@ -236,15 +236,20 @@
                 person:name,
                 times: timeChoices,
                 activity:chosen_categories,
-                custom:customActivity
+                // custom:customActivity
 
             }
+
+            // var infoForBack={};
             console.log(infoForBack)
     
-            // $.post('/'+addr+"/form",infoForBack).then(function(){
-            //     console.log('sent!')
-            //     $("#afterSubmit").append("YOUR INFO HAS BEEN SUBMITTED! YOU MAY NOW GO BACK TO YOUR ROOM PAGE")
-            // })
+            $.post('/'+addr+"/form",infoForBack).then(function(){
+                console.log('sent!')
+                $("#afterSubmit").append("YOUR INFO HAS BEEN SUBMITTED! YOU MAY NOW GO BACK TO YOUR ROOM PAGE");
+            })
+        //     for( day in timeChoices){
+        //     console.log(day + ": " + timeChoices[day]);
+        // }
 
             $(".routeToRoom").on('click', ()=> {
                 $(location).attr('href', '/' + addr)
