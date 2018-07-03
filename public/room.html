@@ -28,23 +28,37 @@
 <body>
     
     <header>
-    <h1 id = "h1">WELCOME TO YOUR ROOM : </h1>
+        <h1 id = "h1">WELCOME TO YOUR ROOM : </h1>
 
-    <p class="formText"><span class="textBody">SAVE</span> THIS PAGE TO COME BACK TO IT.</p> 
-    <p class="formText">PLEASE PROCEED TO THE FORM PAGE TO <span class="textBody">PICK</span> WHAT YOU WANT TO DO AND WHEN.</p>
+    <p class="formText">
+        <span class="textBody">SAVE</span> THIS PAGE TO COME BACK TO IT.
+    </p> 
+
+    <p class="formText">
+        PLEASE PROCEED TO THE FORM PAGE TO <span class="textBody">PICK</span> WHAT YOU WANT TO DO AND WHEN.
+    </p>
     <br/>
-    <h2><a class="routeToForm" id="routeToForm" href="/myroom/form">
-        FORM PAGE
-    </a></h2>
+    <h2>
+        <a class="routeToForm" id="routeToForm" href="/myroom/form">
+        FORM PAGE</a>
+    </h2>
     <br/>
-    <p class="formText">IF YOU WOULD LIKE TO <span class="textBody">CREATE</span> A NEW ROOM, PLEASE PROCEED BACK TO THE HOMEPAGE</p>
+    <p class="formText">
+        IF YOU WOULD LIKE TO <span class="textBody">CREATE</span> A NEW ROOM, PLEASE PROCEED BACK TO THE HOMEPAGE
+    </p>
     <br/>
+    <h2 id="planButton">
+        <a>Get Best Plan For The Group</a>
+    </h2>
+    <br>
     <!-- FOR TESTING ROUTING BACK TO HOME PAGE -->
     <h2><a class="routeToHome" href="/">
         HOME PAGE
     </a></h2>
 
-    </header>
+</header>
+
+
 
     <footer class="footer-distributed">
 
@@ -88,6 +102,18 @@
         addr =addr[addr.length-1];
         $("#routeToForm").attr("href", "/"+addr+"/form");
         $("#h1").append("<span id='specialRoom'>" + addr + "</span>");
+
+        $("#planButton").click(function(){
+            $.get("/api/" + addr + "/best/daytime", function(result){
+                console.log(result);
+            })
+            console.log("plan button clicked" + addr)
+            $.get("/api/" + addr + "/best/category", function(result){
+                console.log("cat done")
+                console.log(result);
+            });
+        })
+        
 
     </script>
 

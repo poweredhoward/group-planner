@@ -150,7 +150,7 @@ module.exports = function(app) {
       
     
     //Give available categories to the front end
-    app.get("/api/form/:room", (req, res)=>{
+    app.get("/api/forms/:room", (req, res)=>{
         console.log("Asking for activities available");
         //Find room id given room name
         db.Room.findOne({
@@ -177,45 +177,53 @@ module.exports = function(app) {
         
     })
 
-    //Print all users in a room
-    app.get("/:room/users", function(req, res){
-        db.User.findAll({
-            where: { RoomId: req.params.room },
-            raw: true
-        }).then(users=>{
-            console.log(users);
+    //Get optimal category
+    app.get("/api/:room/best/category", function(req, res){
+        console.log("Waaa");
+        db.Room.findOne({
+            where: {name: req.params.room}
+        }).then(room =>{
+            db.User.findAll({
+                where: { RoomId: room.id}
+            }).then(users=>{
+                console.log(users);
+    
+                var category_count = {};
+                users.forEach( function(user){
+                    
+                    db.UserCategory.findAll({
+                        where: {UserId: user.id}
+                    }).then(categories => {
+                        console.log("These are the categories chosen by "+ user.name )
+                        // console.log(categories);
+                        categories.forEach(category =>{
+                            if(category.CategoryId in category_count){
+                                category_count[category.CategoryId] += 1;
+                            } else{
+                                category_count[category.CategoryId] = 1;
+                            }
+                        });
 
-            //Get optimal category
-            var category_count = {};
-            users.forEach( function(user){
-                
-                db.UserCategory.findAll({
-                    where: {UserId: user.id},
-                    raw: true
-                }).then(categories => {
-                    console.log("These are the categories chosen by "+ user.name )
-                    // console.log(categories);
-                    categories.forEach(category =>{
-                        if(category.CategoryId in category_count){
-                            category_count[category.CategoryId] += 1;
-                        } else{
-                            category_count[category.CategoryId] = 1;
-                        }
+                        console.log("Category count: ");
+    
+                        //The object with the categories!!!
+                        console.log(category_count);
+    
                     });
-
-                    console.log("Category count: ");
-
-                    //The object with the categories!!!
-                    console.log(category_count);
-                    res.end();
                 });
-            });
+
+                setTimeout(function (){
+                    res.json(category_count);
+                },1000)
+                
+            })
         })
+        
     });
 
     
-
-    app.get("/:room/userstimes", function(req, res){
+    //Get best day and time of day
+    app.get("/api/:room/best/daytime", function(req, res){
         var num_days = 7;
         var count_obj = {};
         function entryToNum(category, daynum){
@@ -257,10 +265,15 @@ module.exports = function(app) {
 
         // var count_matrix = [];
         console.log(db.User.rawAttributes.monday_time.values);
+        db.Room.findOne({
+            where: {name: req.params.room} 
+        }).then(room =>{
+        
         db.User.findAll({
-            where: {RoomId: req.params.room},
+            where: {RoomId: room.id},
             raw: true
         }).then(users =>{
+            console.log(users);
 
             
             //Set up count matrix
@@ -314,8 +327,9 @@ module.exports = function(app) {
             console.log(numToEntry(max_hash));
 
             
-            res.end();
+            res.json(numToEntry(max_hash));
         })
+    })
     })
 
 
@@ -333,11 +347,11 @@ module.exports = function(app) {
                     include:[{
                         model: db.Category
                     }]
-            }],
-            raw: true
+            }]
+            
         }).then(result =>{
             // console.log(result);
-            result.UserCategories.forEach(r => console.log(r.Category));
+            result.UserCategories.forEach(r => console.log(r.Category.activity));
             res.end();
             
         })
@@ -353,7 +367,7 @@ module.exports = function(app) {
             },
             raw: true
         }).then(result =>{
-            console.log(result);
+            // console.log(result);
             if(result === null){
                 res.sendFile(path.join(__dirname, "../public/error.html"));
             }
@@ -367,7 +381,7 @@ module.exports = function(app) {
                     }],
                     raw: true
                 }).then(users =>{
-                    console.log(users);
+                    // console.log(users);
                     res.sendFile(path.join(__dirname, "../public/room.html"));
 
                 })
