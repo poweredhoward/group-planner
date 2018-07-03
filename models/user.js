@@ -7,48 +7,54 @@ module.exports = function(sequelize, DataTypes){
                 len: [1]
             }
         },
-        monday_start: {
-            type: DataTypes.DATE
+        monday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         },
-        monday_end: {
-            type: DataTypes.DATE
+        // monday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
+        // defaultValue: null,
+        // },
+        tuesday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         },
-        tuesday_start: {
-            type: DataTypes.DATE
+        // tuesday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
+        // defaultValue: null,
+        // },
+        wednesday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         },
-        tuesday_end: {
-            type: DataTypes.DATE
+        // wednesday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
+        // defaultValue: null,
+        // },
+        thursday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         },
-        wednesday_start: {
-            type: DataTypes.DATE
+        // thursday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
+        // defaultValue: null,
+        // },
+        friday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         },
-        wednesday_end: {
-            type: DataTypes.DATE
+        // friday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
+        // defaultValue: null,
+        // },
+        saturday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")        
         },
-        thursday_start: {
-            type: DataTypes.DATE
-        },
-        thursday_end: {
-            type: DataTypes.DATE
-        },
-        friday_start: {
-            type: DataTypes.DATE
-        },
-        friday_end: {
-            type: DataTypes.DATE
-        },
-        saturday_start: {
-            type: DataTypes.DATE
-        },
-        saturday_end: {
-            type: DataTypes.DATE
-        },
-        sunday_start: {
-            type: DataTypes.DATE
-        },
-        sunday_end: {
-            type: DataTypes.DATE
+        // saturday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", null),
+        // defaultValue: null,
+        // },
+        sunday_time: {
+            type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night", "")
         }
+        // sunday_end: {
+        //     type: DataTypes.ENUM("Morning", "Afternoon", "Evening", "Late Night")
+        // }
     }, {
         timestamps: false
     });

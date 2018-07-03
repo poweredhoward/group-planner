@@ -21,25 +21,39 @@
     </div>
     
     <br>
-    <div class='dayInput'> 
-        <label>Pick a Day: </label>
-        <select id='day'> 
-            <!-- <option value='1'>Friday</option>
-            <option value='2'>Saturday</option>
-            <option value='3'>Sunday</option> -->
-        </select>
+
+    <p id="newdaytime" style="text-decoration: underline;">
+        Add a New Window of Availability
+    </p>
+    <div id="daytime" style = "display: none;">
+        <div class='dayInput'> 
+            <label>Pick a Day: </label>
+            <select id='day'> 
+                <!-- <option value='1'>Friday</option>
+                <option value='2'>Saturday</option>
+                <option value='3'>Sunday</option> -->
+            </select>
+        </div>
+        <br>
+        
+        <div class='timeOfDayInput'>
+            <label> Pick a Time: </label>
+            <select id='timeOfDay'>
+                    <option value='1'>Morning</option>
+                    <option value='2'>Afternoon</option>
+                    <option value='3'>Evening</option>
+                    <option value='4'>Late Night</option>
+            </select>
+        </div>
+
+        <button id="addavailablity">Add To Your Availability</button>
     </div>
-    <br>
+
+    <div id="chosenDayTime">
+
+    </div>
+
     
-    <div class='timeOfDayInput'>
-        <label> Pick a Time: </label>
-    <select id='timeOfDay'>
-            <option value='1'>Morning</option>
-            <option value='2'>Afternoon</option>
-            <option value='3'>Night</option>
-            <option value='4'>After Hours</option>
-    </select>
-    </div>
     
     <div class='activitysInput'>
         <label>And of course...Activity:  </label>
@@ -90,8 +104,20 @@
         addr = addr[addr.length-2];
         var number_of_choices = 0;
 
+        // var timeChoices = [];
+        var timeChoices = {
+            sunday: null,
+            monday: null,
+            tuesday: null,
+            wednesday: null,
+            thursday: null,
+            friday: null,
+            saturday: null
+        }
+
         //Get activity options. Defaults AND custom activities for a certain room
         var categorychoices = [];
+
         $.ajax({
             method: "GET",
             url: "/api/form/" + addr
@@ -116,18 +142,39 @@
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         var today = new Date().getDay();
         var ordereddays =[];
-        ordereddays[0] = days[today] + " (Today)";
-        for(var i=0; i<days.length ; i++){
+        // ordereddays[0] = days[today] + " (Today)";
+        ordereddays[0] = days[today];
+        for(var i=today; i<days.length ; i++){
             if(i !== today)
             ordereddays.push(days[i]);
         };
+        for(var i=0 ; i<today ; i++){
+            ordereddays.push(days[i]);
+        }
     
-        ordereddays.push(days[today] + " (Next Week)");
+        //ordereddays.push(days[today] + " (Next Week)");
     
         ordereddays.forEach(day =>{
             $("#day").append( $("<option>").text(day) );
         });
 
+        $("#newdaytime").click(function(){
+            $("#daytime").toggle();
+        });
+
+        $("#addavailablity").click(function(){
+            addAvailability();
+        });
+
+        $("#chosenDayTime").on("click", ".deleteEntry", function(){
+            console.log("inside delete entry");
+            var dayToDelete = $(this).parent().find(":contains('Day')").text().split(" ")[1].toLowerCase();
+            console.log( dayToDelete );
+            timeChoices[dayToDelete] = null;
+            // console.log( $(this).parent().find(":contains('Day')").text() );
+            $(this).closest("span").remove();
+        })
+        
 
         //Add a custom activity to list and select it
         $("#btn-addChoice").click(function(){
@@ -138,6 +185,24 @@
             $("#userActivity").append( option );
             $("#customActivity").val("");
         });
+
+
+        function addAvailability(){
+            var day = $("#day").val();
+            var time = $("#timeOfDay :selected").text();
+            if(timeChoices[day.toLowerCase()] === null ){
+                timeChoices[day.toLowerCase()] = time;
+
+                var newEntry = $("<span>");
+                newEntry.addClass(day);
+                newEntry.append( $("<p>").text("Day: " + day) );
+                newEntry.append( $("<p>").text("Time: " + time) );
+                newEntry.append( $("<button>").text("Delete").attr("class", "deleteEntry") );
+                $("#chosenDayTime").append(newEntry);
+            }
+
+            
+        }
         
         //Send info to server
         // user click to grab all the data
@@ -146,74 +211,50 @@
             // name, day, time of day value
             var name=$("#leaderName").val();
             var day=$("#day").val();
-            var timeOfDay=$("#timeOfDay").val();
-            var activity=$(".userActivity").val();
-            var customActivity=null;
+            //var timeOfDay=$("#timeOfDay").val();
+            // var activity=$("#userActivity").val();
+            // var customActivity=null;
 
 
-            // translating from the dayChoice drop-menu
-            //   if(day === '1'){day="Friday"}
-            //   if(day === '2'){day="Saturday"}
-            //   if(day === '3'){day="Sunday"}
-            
-    
-              if(timeOfDay === '1'){timeOfDay="Morning"}
-              if(timeOfDay === '2'){timeOfDay="Afternoon"}
-              if(timeOfDay === '3'){timeOfDay="Night"}
-              if(timeOfDay === '4'){timeOfDay="After Hours"}
-    
-    //translating and grabbing from activity menu...and/or other option box
-            
-              if(activity === '1'){activity="lets go eat somewhere"}
-              if(activity === '2'){activity="catch a movie"}
-              if(activity === '3'){activity="concert"}
-              if(activity === '4'){activity="recreational sport"}
-              if(activity === '5'){activity="sporting event"}
-              if(activity === '6'){activity="museum"}
-              if(activity === '7'){activity="beach"}
-              if(activity === '8'){activity="clubbing"}
-              if(activity === '9'){activity="bar hopping"}
-              if(activity === "10"){activity="other"}
-              // custom input grab
-              if(activity === "other"){
-                  customActivity=$("#customActivity").val();
-                }
-              console.log(activity)
+            var chosen_categories = [];
 
-               var categories = [];
-
-                var t = $("#userActivity :selected").each(function(){
-                categories.push($(this).text())
+            var t = $("#userActivity :selected").each(function(){
+                chosen_categories.push($(this).text())
             });
   
-     //object to send to back-end
-     var infoForBack={
+            //object to send to back-end
+            // var infoForBack={
+            //     person:name,
+            //     day:day,
+            //     time:timeOfDay,
+            //     activity:chosen_categories,
+            //     custom:customActivity
+
+            // }
+
+            var infoForBack={
                 person:name,
-                day:day,
-                time:timeOfDay,
-                activity:categories,
-                custom:customActivity
+                times: timeChoices,
+                activity:chosen_categories,
+                // custom:customActivity
 
             }
+
+            // var infoForBack={};
             console.log(infoForBack)
     
-              $.post('/'+addr+"/form",infoForBack).then(function(){
-                  console.log('sent!')
-                $("#afterSubmit").append("YOUR INFO HAS BEEN SUBMITTED! YOU MAY NOW GO BACK TO YOUR ROOM PAGE")
-              })
+            $.post('/'+addr+"/form",infoForBack).then(function(){
+                console.log('sent!')
+                $("#afterSubmit").append("YOUR INFO HAS BEEN SUBMITTED! YOU MAY NOW GO BACK TO YOUR ROOM PAGE");
+            })
+        //     for( day in timeChoices){
+        //     console.log(day + ": " + timeChoices[day]);
+        // }
 
-                $(".routeToRoom").on('click', ()=> {
+            $(".routeToRoom").on('click', ()=> {
                 $(location).attr('href', '/' + addr)
-                }) 
+            }) 
             
-        
-
-           
-
-
-            // $.post('/'+addr+"/form",infoForBack).then(function(){
-            //     console.log('sent!')
-            // }) 
         });
             
     </script>
