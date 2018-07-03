@@ -222,6 +222,35 @@ module.exports = function(app) {
         })
     });
 
-
     
-};
+
+    app.get("/justin/bryan", function(req,res){
+        db.User.findAll({}).then(function(results){
+            console.log(results,"this is our data");
+            console.log(results[0].name, "this is the first entry");
+            var arraynames = [];
+            var throwAway = [];
+            for (var i = 0; i < results.length; i++){
+                if (results[i].monday_start === null){
+                    throwAway.push(results[i].monday_start);
+                }
+                arraynames.push(results[i]);
+                
+    
+            }
+            console.log(arraynames, "this is your array output");
+
+            res.render("index", {users:arraynames})
+            
+            var times = [];
+
+            console.log(arraynames)
+        });
+
+        
+
+    }
+
+  
+    
+    )};
