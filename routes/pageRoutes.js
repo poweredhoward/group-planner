@@ -18,6 +18,7 @@ module.exports = function(app) {
         res.sendFile(path.join(__dirname, "../public/newroom.html"));
     });
 
+    
     //Logic when user submits a form
     app.post("/:room/form", function(req,res){
         console.log(req.body);
@@ -33,51 +34,14 @@ module.exports = function(app) {
             name: req.body.person            
         };
 
+        //Add attribute to user query for each time a user chose
         for( day in times){
-            // var s = null;
-            // var e = null;
-            //Mapping time of day chosen to exact time windows
-            // switch(times[day]){
-            //     case "Morning":
-            //         s = new Date("June 28, 2018 09:00");
-            //         e = new Date("June 28 2018 13:00");
-            //         break;
-            //     case "Afternoon":
-            //         s = new Date("June 28, 2018 13:00");
-            //         e = new Date("June 28 2018 17:00");
-            //         break;
-            //     case "Evening":
-            //         s = new Date("June 28, 2018 17:00");
-            //         e = new Date("June 28 2018 21:00");
-            //         break;
-            //     case "Late Night":
-            //         s = new Date("June 28, 2018 21:00");
-            //         e = new Date("June 28 2018 24:00");
-            //         break;
-            // }
-            // var start_day = day + "_start";
-            // var end_day = day + "_end";
             var day_time = day + "_time";
-
-            // if(s !== null && e !== null){
-                // user_query[start_day] = s;
-                // user_query[end_day] = e;
             user_query[day_time] = times[day];
-            // }
-            
         }
+
         console.log("This is the user query: ");
         console.log(user_query);
-
-        // var user_query = {
-        //     name: req.body.person,
-        //     [start_day]: s,
-        //     [end_day]: e,
-            
-        // };
-
-        // console.log(s);
-        // console.log(e);
        
         //Get room ID from room name
         db.Room.findOne({
@@ -108,6 +72,7 @@ module.exports = function(app) {
                     }
                     category_query.RoomId = room.id;
 
+                    //Make a new category in correct room if new custom category
                     db.Category.findOrCreate({ 
                         where: {activity: category},
                         defaults: category_query,
@@ -135,8 +100,9 @@ module.exports = function(app) {
        
     });
 
-    //New room
+    //New room page
     app.post('/api/postRoom',(req,res)=>{
+
         var room=req.body;
         console.log(room.name)
         db.Room.findOrCreate({
@@ -179,7 +145,6 @@ module.exports = function(app) {
 
     //Get optimal category
     app.get("/api/:room/best/category", function(req, res){
-        console.log("Waaa");
         db.Room.findOne({
             where: {name: req.params.room}
         }).then(room =>{
@@ -187,7 +152,7 @@ module.exports = function(app) {
                 where: { RoomId: room.id}
             }).then(users=>{
                 console.log(users);
-    
+                //Object to hold counts of each category occurence
                 var category_count = {};
                 users.forEach( function(user){
                     
@@ -238,9 +203,13 @@ module.exports = function(app) {
     
     //Get best day and time of day
     app.get("/api/:room/best/daytime", function(req, res){
+        //Possible day fields, possibly don't need it
         var num_days = 7;
         var count_obj = {};
+
+        //Convert day/time entry to a unique number for each possibility that appears and track occurences
         function entryToNum(category, daynum){
+            //Possible enum values
             var enumm = db.User.rawAttributes.monday_time.values;
             var multipliers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
             var values = multipliers[enumm.indexOf(category)];
@@ -264,6 +233,7 @@ module.exports = function(app) {
         }
         var days_of_week = [];
 
+        //Get best day and time from hash count object
         function numToEntry(hashnum){
             var enumm = db.User.rawAttributes.monday_time.values;
             var multipliers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
@@ -283,108 +253,67 @@ module.exports = function(app) {
             where: {name: req.params.room} 
         }).then(room =>{
         
-        db.User.findAll({
-            where: {RoomId: room.id},
-            raw: true
-        }).then(users =>{
-            console.log(users);
+            db.User.findAll({
+                where: {RoomId: room.id},
+                raw: true
+            }).then(users =>{
+                console.log(users);
 
-            
-            //Set up count matrix
-            /*users.forEach((user, col_num) => {
-                console.log(user);
-                // var userArray = [];
-                for(field in user){
+                //Make possible day array from fields for a user
+                for(field in users[0]){
                     // console.log(field)
                     if(field.split("_")[1] === "time"){
-                        // userArray.push(0);
                         //entryToNum(user[field], col_num);
                         days_of_week.push((field.split("_")[0]));
-
-
                     }
                     
                 }
-                //count_matrix.push(userArray);
-            });*/
 
-            for(field in users[0]){
-                // console.log(field)
-                if(field.split("_")[1] === "time"){
-                    // userArray.push(0);
-                    //entryToNum(user[field], col_num);
-                    days_of_week.push((field.split("_")[0]));
+                console.log(days_of_week);
+
+                //For each day of the week for each user, add to hash count object
+                users.forEach(user =>{
+                    for(var i=0 ; i<days_of_week.length ; i++){
+                        var d = days_of_week[i] + "_time";
+                        entryToNum(user[d], i);
+                    }
+                })
+                // console.log(count_matrix);
+                console.log(count_obj);
+
+                var max_hash = 0;
+                var max_count = 0;
+                //Find highest number in hash count object
+                for(hash in count_obj){
+                    if(count_obj[hash].count > max_count){
+                        max_hash = hash;
+                        max_count = count_obj[hash].count;
+                    }
                 }
-                
-            }
 
-            console.log(days_of_week);
-
-            users.forEach(user =>{
-                for(var i=0 ; i<days_of_week.length ; i++){
-                    var d = days_of_week[i] + "_time";
-                    entryToNum(user[d], i);
-                }
+                console.log(numToEntry(max_hash));
+                res.json(numToEntry(max_hash));
             })
-            // console.log(count_matrix);
-            console.log(count_obj);
-
-            var max_hash = 0;
-            var max_count = 0;
-            for(hash in count_obj){
-                if(count_obj[hash].count > max_count){
-                    max_hash = hash;
-                    max_count = count_obj[hash].count;
-                }
-            }
-
-            console.log(numToEntry(max_hash));
-
-            
-            res.json(numToEntry(max_hash));
         })
     })
-    })
 
 
 
 
-    //Return all categories associated with a user
-    app.get("/:room", function(req, res) {
-        var room = req.params.room;
-        //Link user table to category table through usercategory
-        // db.User.findOne({
-        //     where: {
-        //         id: userid
-        //     }, include: [{
-        //             model: db.UserCategory,
-        //             include:[{
-        //                 model: db.Category
-        //             }]
-        //     }]
-            
-        // }).then(result =>{
-        //     // console.log(result);
-        //     result.UserCategories.forEach(r => console.log(r.Category.activity));
-        //     // res.end();
-            
-            
-        
-        //     // for (var i = 0; i < results.UserCategories.length; i++){
-        //     //     console.log(results.UserCategories[i].activity, "category")
-                
-        //     // }
-        //     // console.log(activities, "here are the activites")
-        //     //   res.render("index", {activities:results});
-    
-        
+    //Send user choices and times to handlebars
+    app.get("/:room", function(req, res) {    
         var userlist = [];
+        //Get room from name
         db.Room.findOne({
-            where: {name: room}
+            where: {name: req.params.room}
         }).then(room =>{
+            console.log("Room is printing: ");
+            console.log(room);
+            //Get all users in room
             db.User.findAll({
                 where: {RoomId: room.id}
             }).then( function(allusers){
+                //For each user, get times and all activities
                 allusers.forEach( user =>{
                     var userobj = {};
                     var activities = [];
@@ -400,7 +329,9 @@ module.exports = function(app) {
                         }]
                         
                     }).then(categories =>{
-                        categories.UserCategories.forEach(cat => activities.push(cat.Category.activity));
+                        categories.UserCategories.forEach(
+                            cat => activities.push(cat.Category.activity)
+                        );
                         console.log("user: " + user.name);
                         console.log("categories: " + activities);
                         userobj.user = user;
@@ -412,11 +343,12 @@ module.exports = function(app) {
     
                     })
                 })
+                // res.render("index", {users: userlist});
                
-                
+                //Wait key to control for callback issues
                 setTimeout(function(){
                     res.render("index", {users: userlist});
-                }, 1000)
+                }, 900)
                 // console.log(oneuser.Category.activity, "dataactivity")
                 
                 
@@ -426,41 +358,6 @@ module.exports = function(app) {
     
     });
     
-
-
-
-    // //Get all users for a given room
-    // app.get("/:room", function(req, res) {
-    //     var roomname = req.params.room;
-    //     db.Room.findOne({
-    //         where: {
-    //             name: roomname
-    //         },
-    //         raw: true
-    //     }).then(result =>{
-    //         // console.log(result);
-    //         if(result === null){
-    //             res.sendFile(path.join(__dirname, "../public/error.html"));
-    //         }
-    //         else{
-    //             db.User.findAll({
-    //                 where: {
-    //                     RoomId: result.id
-    //                 },
-    //                 include: [{
-    //                     model: db.Room
-    //                 }],
-    //                 raw: true
-    //             }).then(users =>{
-    //                 // console.log(users);
-    //                 res.sendFile(path.join(__dirname, "../public/room.html"));
-
-    //             })
-
-    //         }
-    //     })
-        
-    // });
 
     //Send form page to front end
     app.get("/:room/form", function(req, res) {
@@ -480,9 +377,9 @@ module.exports = function(app) {
             }
         })
     });
-    
-    //route to send email
 
+
+    //route to send email
     app.post("/sendMail", function(req, res){
         var transporter = nodemailer.createTransport({
             service: 'gmail',
