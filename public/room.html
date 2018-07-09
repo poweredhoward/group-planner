@@ -50,6 +50,8 @@
     <h2 id="planButton">
         <a>Get Best Plan For The Group</a>
     </h2>
+    <br/>
+    <div id="info">THE BEST TIME AND DAY FOR YOUR GROUP IS : <span id="infoDisplay"></span></div>
     <br>
     <!-- FOR TESTING ROUTING BACK TO HOME PAGE -->
     <h2><a class="routeToHome" href="/">
@@ -106,6 +108,7 @@
         $("#planButton").click(function(){
             $.get("/api/" + addr + "/best/daytime", function(result){
                 console.log(result);
+                $("#infoDisplay").html(JSON.stringify(result, null, 4));
             })
             console.log("plan button clicked" + addr)
             $.get("/api/" + addr + "/best/category", function(result){
