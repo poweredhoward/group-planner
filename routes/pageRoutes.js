@@ -387,38 +387,38 @@ module.exports = function(app) {
 
 
 
-    //Get all users for a given room
-    app.get("/:room", function(req, res) {
-        var roomname = req.params.room;
-        db.Room.findOne({
-            where: {
-                name: roomname
-            },
-            raw: true
-        }).then(result =>{
-            console.log(result);
-            if(result === null){
-                res.sendFile(path.join(__dirname, "../public/error.html"));
-            }
-            else{
-                db.User.findAll({
-                    where: {
-                        RoomId: result.id
-                    },
-                    include: [{
-                        model: db.Room
-                    }],
-                    raw: true
-                }).then(users =>{
-                    console.log(users);
-                    res.sendFile(path.join(__dirname, "../public/room.html"));
+    // //Get all users for a given room
+    // app.get("/:room", function(req, res) {
+    //     var roomname = req.params.room;
+    //     db.Room.findOne({
+    //         where: {
+    //             name: roomname
+    //         },
+    //         raw: true
+    //     }).then(result =>{
+    //         console.log(result);
+    //         if(result === null){
+    //             res.sendFile(path.join(__dirname, "../public/error.html"));
+    //         }
+    //         else{
+    //             db.User.findAll({
+    //                 where: {
+    //                     RoomId: result.id
+    //                 },
+    //                 include: [{
+    //                     model: db.Room
+    //                 }],
+    //                 raw: true
+    //             }).then(users =>{
+    //                 console.log(users);
+    //                 res.sendFile(path.join(__dirname, "../public/room.html"));
 
-                })
+    //             })
 
-            }
-        })
+    //         }
+    //     })
         
-    });
+    // });
 
     //Send form page to front end
     app.get("/:room/form", function(req, res) {
