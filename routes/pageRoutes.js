@@ -348,6 +348,7 @@ module.exports = function(app) {
                 //Wait key to control for callback issues
                 setTimeout(function(){
                     res.render("index", {users: userlist});
+                    // res.sendFile(path.join(__dirname, "../public/room.html"));
                 }, 900)
                 // console.log(oneuser.Category.activity, "dataactivity")
                 

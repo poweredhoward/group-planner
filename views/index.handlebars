@@ -1,9 +1,81 @@
+{{!-- <head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="footer, contact, form, icons" />
+    
+    <link rel="stylesheet" href="css/index.css">  
+    <link rel="stylesheet" href="css/room.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
+  
+    <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous">
+    </script>
+
+    <title>ROOM</title>
+
+</head> --}}
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="css/index.css">  
+    <link rel="stylesheet" href="css/room.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+
+<script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous">
+    </script>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<h1>Results:</h1>
+<body>
+<header>
+        <h1 id = "h1">WELCOME TO YOUR ROOM : </h1>
+
+    <p class="formText">
+        <span class="textBody">SAVE</span> THIS PAGE TO COME BACK TO IT.
+    </p> 
+
+    <p class="formText">
+        PLEASE PROCEED TO THE FORM PAGE TO <span class="textBody">PICK</span> WHAT YOU WANT TO DO AND WHEN.
+    </p>
+    <br/>
+    <h2>
+        <a class="routeToForm" id="routeToForm" href="/myroom/form">
+        FORM PAGE</a>
+    </h2>
+    <br/>
+    <p class="formText">
+        IF YOU WOULD LIKE TO <span class="textBody">CREATE</span> A NEW ROOM, PLEASE PROCEED BACK TO THE HOMEPAGE
+    </p>
+    <br/>
+    <h2 id="planButton">
+        <a>Get Best Plan For The Group</a>
+    </h2>
+    <br/>
+    <div id="info">THE BEST TIME AND DAY FOR YOUR GROUP IS : <span id="infoDisplay"></span></div>
+    <br>
+    <!-- FOR TESTING ROUTING BACK TO HOME PAGE -->
+    <h2><a class="routeToHome" href="/">
+        HOME PAGE
+    </a></h2>
+
+</header>
 
 
-    <table class="table table-bordered">
+    <table class="table table-bordered" >
     <thead>
       <h2>  <th>Name</th>
         <th>Activity</th>
@@ -34,33 +106,29 @@
     </tbody>
 </table>
 
+</body>
 
-{{!-- <table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table> --}}
+
+ <script>
+
+
+        var addr = $(location).attr('href').split("/");
+        addr =addr[addr.length-1];
+        $("#routeToForm").attr("href", "/"+addr+"/form");
+        $("#h1").append("<span id='specialRoom'>" + addr + "</span>");
+
+        $("#planButton").click(function(){
+            $.get("/api/" + addr + "/best/daytime", function(result){
+                console.log(result);
+                $("#infoDisplay").html(JSON.stringify(result, null, 4));
+            })
+            console.log("plan button clicked" + addr)
+            $.get("/api/" + addr + "/best/category", function(result){
+                console.log("cat done")
+                console.log(result);
+            });
+        })
+        
+
+    </script>
+
