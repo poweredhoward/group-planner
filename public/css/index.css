@@ -72,3 +72,12 @@ footer{
 	position: fixed;
 	bottom: 0;
 }
+
+table{font-family: pasa;
+	font-size: 30px;
+	color: rgb(163, 30, 163);
+	padding-bottom: 16px; }
+
+.hbBody{background: url(../images/bg.png);}
+
+h1{color: rgb(163, 30, 163);}

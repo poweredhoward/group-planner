@@ -1,36 +1,8 @@
-{{!-- <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="footer, contact, form, icons" />
-    
-    <link rel="stylesheet" href="css/index.css">  
+ <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/room.css">
-    <link rel="stylesheet" href="css/footer.css">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-
-  
-    <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
-
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.js"
-      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-      crossorigin="anonymous">
-    </script>
-
-    <title>ROOM</title>
-
-</head> --}}
-
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-
-  <link rel="stylesheet" href="css/index.css">  
-    <link rel="stylesheet" href="css/room.css">
-    <link rel="stylesheet" href="css/footer.css">
-
-    <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+   <link rel="stylesheet" href="css/footer.css">
 
 <script
       src="https://code.jquery.com/jquery-3.3.1.js"
@@ -38,9 +10,10 @@
       crossorigin="anonymous">
     </script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+<body class='hbBody'>
+ <h1 id = "h1">WELCOME TO YOUR ROOM : </h1>
 
-<body>
 <header>
         <h1 id = "h1">WELCOME TO YOUR ROOM : </h1>
 
@@ -65,7 +38,7 @@
         <a>Get Best Plan For The Group</a>
     </h2>
     <br/>
-    <div id="info">THE BEST TIME AND DAY FOR YOUR GROUP IS : <span id="infoDisplay"></span></div>
+    <div id="info">THE BEST PLAN FOR YOUR GROUP IS : <span id="infoDisplay"></span></div>
     <br>
     <!-- FOR TESTING ROUTING BACK TO HOME PAGE -->
     <h2><a class="routeToHome" href="/">
@@ -74,8 +47,7 @@
 
 </header>
 
-
-    <table class="table table-bordered" >
+    <table class="table table-bordered" style="font-size: 20px;">
     <thead>
       <h2>  <th>Name</th>
         <th>Activity</th>
@@ -120,12 +92,18 @@
         $("#planButton").click(function(){
             $.get("/api/" + addr + "/best/daytime", function(result){
                 console.log(result);
-                $("#infoDisplay").html(JSON.stringify(result, null, 4));
+                var day  = $("<p>").text( "Best day: " +  result.day);
+                var time = $("<p>").text("Time: " + result.time);
+               
+                $("#infoDisplay").append(day);
+                $("#infoDisplay").append(time);
             })
             console.log("plan button clicked" + addr)
             $.get("/api/" + addr + "/best/category", function(result){
                 console.log("cat done")
                 console.log(result);
+                var activity = $("<p>").text("Activity: " + result.category );
+                $("#infoDisplay").append(activity);
             });
         })
         
