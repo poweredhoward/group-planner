@@ -8,7 +8,7 @@ Add screenshots or gif here
 * HTML5
 * CSS3
 * jQuery
-* Font-awesome?
+* Font-awesome
 
 ### Back-end
 * Node.js
