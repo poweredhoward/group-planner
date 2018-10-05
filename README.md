@@ -1,5 +1,7 @@
 # Group-Planner
-A web app that helps friends plan activities. Everyone in the group takes a survey to get everyone's availability and preferred activites, and the app will output an ideal plan that based on the most popular responses 
+A web app that helps friends plan activities. Everyone in the group takes a survey to get everyone's availability and preferred activites, and the app will output an ideal plan that based on the most popular responses  
+
+### [Visit Live Site Here](https://group-activity-planner.herokuapp.com/ "Group-Planner")  
 
 Add screenshots or gif here
 
