@@ -23,7 +23,7 @@ Add screenshots or gif here
     * MySQL
     * Node.js
     * npm or yarn
-* Clone or download the repo `git clone afadfsasdfsdf`
+* Clone or download the repo `git clone https://github.com/poweredhoward/group-planner.git`
 * Navigate to project`cd group-planner`
 * Install dependencies`npm install`
 * Start server `node start`
